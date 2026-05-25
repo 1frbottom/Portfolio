@@ -23,12 +23,12 @@
 | <br>**개발 기간 :** `2026.03 ~ 진행중`<br><br>**인원 :** `1명` <br><br>**Repository :** [링크](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br>**사용 기술 :** `UE5`, `C++`<br><br> |
 
 #### 핵심 기여
-1. `OnlineSubsystem` 및 서버 권위 기반의 멀티플레이어 프레임워크 설계
-    - `GameInstance` 클래스에서 `OnlineSubsystem` 을 활용해 세션 생성, 검색 및 스팀 친구 초대 콜백( `OnSessionUserInviteAccepted()` )을 구현. 예외 상황 발생 시 `OnNetworkFailure()` 델리게이트와 연동하여 세션을 안전하게 파괴하고 메인 메뉴로 복귀( `ClientTravel` )하는 예외 처리 흐름 구축.
+1. `OnlineSubsystem` 및 서버 권위 기반 멀티플레이어 프레임워크
+    - `GameInstance` 클래스에서 `OnlineSubsystem` 을 활용해 세션 생성, 검색 및 스팀 친구 초대 콜백( `OnSessionUserInviteAccepted()` ) 구현. 예외상황 발생 시 `OnNetworkFailure()` 델리게이트와 연동하여 세션을 안전하게 파괴, 메인 메뉴로 복귀( `ClientTravel` )하는 예외처리 흐름 구축.
 
-    - 서버 권위 원칙에 따라 `GameState` 클래스에서 게임 흐름( `ENYGamePhase` )을 통제. 데이터가 변경될 때 `RepNotify`( `OnRep_CurrPhase()` )를 통해 각 클라이언트의 `PlayerController` 클래스가 정확한 시점에 UI( `ShowRewardUI()`, `ShowGameOverUI()` )를 띄우도록 동기화하여 멀티플레이 환경의 UI 누락 및 타이밍 이슈 해결.
+    - 서버 원칙에 따라 `GameState` 클래스에서 게임 흐름( `ENYGamePhase` )을 통제. 데이터가 변경될 때 `RepNotify`( `OnRep_CurrPhase()` )를 통해 각 클라이언트의 `PlayerController`가 정확한 시점에 UI( `ShowRewardUI()`, `ShowGameOverUI()` )를 띄우도록 동기화하여 멀티플레이 환경의 UI 타이밍 이슈 방지.
 
-    - 클라이언트의 입력(보상 선택, 재도전 등)은 `PlayerController` 클래스의 RPC( `Server_RequestRetry()` )를 통해 서버 측 `GameMode` 클래스로 전달하여 검증. UI 렌더링(HUD) 로직은 `BlueprintImplementableEvent` 로 노출시켜 C++ 코드와 블루프린트 간의 결합도를 낮추고 유지보수성 향상.<br><br>
+    - 클라이언트의 입력(보상 선택, 재도전 등)은 `PlayerController`의 RPC( `Server_RequestRetry()` )를 통해 서버 측 `GameMode` 클래스로 전달하여 검증. UI렌더링 로직은 `BlueprintImplementableEvent` 로 노출시켜 소스와 블루프린트 간의 결합도를 낮춤.<br><br>
 
 #### 트러블슈팅
 
