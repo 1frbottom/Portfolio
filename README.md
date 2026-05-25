@@ -102,8 +102,8 @@
 >강한 결합( `Tight Coupling` ) -> 기존에 고스트 C++ 클래스가 생성자에서 ABP를 참조하고 있었기 때문에 컴파일타임에 헤더 파일끼리 서로를 참조하는 `Circular Dependency` 오류 발생.
 ><br><br>
 >**해결 과정 :**
->- C++ 인터페이스( `IAttackAnimEventsInterface` ) 안에 `DoAttackHitCheck()` 를 선언하여 고스트 C++ 클래스가 상속.
->- 고스트 C++ 클래스에서 이 함수를 정의함으로서 ABP에서는 캐스팅 노드 대신 `Interface Message` 노드를 사용하여 함수를 호출.
+>- C++ 인터페이스( `IAttackAnimEventsInterface` ) 안에 `DoAttackHitCheck()` 를 선언하여 고스트 C++ 클래스가 상속.<br><br>
+>- 고스트 C++ 클래스에서 이 함수를 정의함으로서 ABP에서는 캐스팅 노드 대신 `Interface Message` 노드를 사용하여 함수를 호출.<br><br>
 >- 컴파일타임의 정적 검사 대신, 런타임에 언리얼의 리플렉션 시스템을 이용하여 순환 참조를 해결. 
 
 </details>
@@ -143,7 +143,7 @@
 >x축 거리에 비례해 속도를 더하는 가속도 로직( `velocity += dx * coefficient` ) 특성상, 둘 사이의 거리가 0이 되더라도 이미 누적된 횡이동 속도(관성)가 남아있음.
 ><br><br>
 >**해결 과정:**
->- dx값이 특정 임계값(20.0f) 이내로 좁혀졌을 때 작동하는 마찰(Damping) 로직 도입.
+>- dx값이 특정 임계값(20.0f) 이내로 좁혀졌을 때 작동하는 마찰(Damping) 로직 도입.<br><br>
 >- 정렬이 거의 완료되면 매 프레임 x축 속도에 감속 계수(0.95f)를 곱해 관성을 상쇄, 부드럽게 플레이어를 따라 하강.
 >
 
@@ -193,7 +193,7 @@
 ><br><br>
 >**해결 과정 :**
 >
->- Spark SQL의 `coalesce()` 사용하여 JSON 스키마 경로가 변경되더라도 유연하게 대처.
+>- Spark SQL의 `coalesce()` 사용하여 JSON 스키마 경로가 변경되더라도 유연하게 대처.<br><br>
 >- 백엔드에서는 `json.loads()` 수행시 예외처리와 헬퍼 함수 `get_Val()`를 구현하여 필드누락이나 비정상데이터에 대해서 안전하게 방어.
 </details>
 </ul>
