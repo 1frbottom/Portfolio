@@ -24,7 +24,7 @@
 
 #### 핵심 기여
 1. `OnlineSubsystem` 및 서버 권위 기반 멀티플레이어 프레임워크
-    - `GameInstance` 클래스에서 `OnlineSubsystem` 을 활용해 세션 생성, 검색 및 스팀 친구 초대 콜백( `OnSessionUserInviteAccepted()` ) 구현. 예외상황 발생 시 `OnNetworkFailure()` 델리게이트와 연동하여 세션을 안전하게 파괴, 메인 메뉴로 복귀( `ClientTravel` )하는 예외처리 흐름 구축.
+    - `GameInstance` 클래스에서 `OnlineSubsystem` 을 활용해 세션 생성, 검색 및 스팀 친구 초대 콜백{ `OnSessionUserInviteAccepted()` } 구현. 예외상황 발생 시 `OnNetworkFailure()` 델리게이트와 연동하여 세션을 안전하게 파괴, 메인 메뉴로 복귀( `ClientTravel` )하는 예외처리 흐름 구축.
 
     - 서버 원칙에 따라 `GameState` 클래스에서 게임 흐름( `ENYGamePhase` )을 통제. 데이터가 변경될 때 `RepNotify`( `OnRep_CurrPhase()` )를 통해 각 클라이언트의 `PlayerController`가 정확한 시점에 UI( `ShowRewardUI()`, `ShowGameOverUI()` )를 띄우도록 동기화하여 멀티플레이 환경의 UI 타이밍 이슈 방지.
 
