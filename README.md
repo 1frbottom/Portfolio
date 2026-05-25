@@ -14,12 +14,59 @@
 
 ## 📄 Projects
 
-### 1. 언리얼 공포 게임 <sub>(사이드 프로젝트)<sub>
-> **요약 :** "언리얼 엔진을 사용한 3D 인도어 호러게임"
+### 1. 멀티 뱀서라이크 <sub>(사이드 프로젝트)<sub>
+> **요약 :** "언리얼 엔진을 사용한 3D 뱀서라이크 게임"
 
 | Preview & Info |
 | :---: |
-| <img src="https://github.com/user-attachments/assets/abb2e49e-7291-4580-b49f-664b9530a2a5" width="500px"> |
+| <img src="https://github.com/user-attachments/assets/57cd3550-6b5f-43ae-b016-b644ae3dee9d" width="500px"> |
+| <br>**개발 기간 :** `2026.03 ~ 진행중`<br><br>**인원 :** `1명` <br><br>**Repository :** [링크](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br>**사용 기술 :** `UE5`, `C++`<br><br> |
+
+#### 핵심 기여
+1. `OnlineSubsystem` 및 서버 권위 기반의 멀티플레이어 프레임워크 설계
+    - `GameInstance` 클래스에서 `OnlineSubsystem` 을 활용해 세션 생성, 검색 및 스팀 친구 초대 콜백( `OnSessionUserInviteAccepted()` )을 구현. 예외 상황 발생 시 `OnNetworkFailure()` 델리게이트와 연동하여 세션을 안전하게 파괴하고 메인 메뉴로 복귀( `ClientTravel` )하는 예외 처리 흐름 구축.
+
+    - 서버 권위 원칙에 따라 `GameState` 클래스에서 게임 흐름( `ENYGamePhase` )을 통제. 데이터가 변경될 때 `RepNotify`( `OnRep_CurrPhase()` )를 통해 각 클라이언트의 `PlayerController` 클래스가 정확한 시점에 UI( `ShowRewardUI()`, `ShowGameOverUI()` )를 띄우도록 동기화하여 멀티플레이 환경의 UI 누락 및 타이밍 이슈 해결.
+
+    - 클라이언트의 입력(보상 선택, 재도전 등)은 `PlayerController` 클래스의 RPC( `Server_RequestRetry()` )를 통해 서버 측 `GameMode` 클래스로 전달하여 검증. UI 렌더링(HUD) 로직은 `BlueprintImplementableEvent` 로 노출시켜 C++ 코드와 블루프린트 간의 결합도를 낮추고 유지보수성 향상.<br><br>
+
+#### 트러블슈팅
+
+<ul>
+<details>
+<summary> [ OnGoing ] 대규모 몬스터 처리 성능 최적화 및 네트워크 동기화 이슈 ( Click )</summary>
+
+<br>
+
+>**문제 상황 :**
+>
+>`1,000`마리 규모의 몬스터 스폰 시 프레임 타임이 선형적으로 급증. 이후 최적화로 Frame Time은 어느정도 완화했으나, 리슨 서버-클라이언트 환경에서 네트워크 대역폭 초과로 인해 몬스터 움직임이 끊기는 스터터링 현상 발생.
+><br><br>
+>**원인 분석 :**
+>
+>- 잦은 `SpawnActor()` 로 인한 메모리 할당 및 Garbage Collector 부하.
+>- 몬스터 이동 시 물리 Sweep 연산, `GetOverlappingActors()` 및 UI(Widget) 렌더링의 누적 병목.
+>- 대량의 몬스터 Transform을 서버가 매 프레임 `ReplicateMovement`로 동기화하면서 발생한 네트워크 병목.<br><br>
+>
+>**해결 과정 :**
+>  
+>- 성능 최적화 ( `해결` ): Object Pool 도입하여 액터 생성 비용 제거. 이동 로직의 Sweep을 비활성화하고 피격 판정을 단순 거리 벡터로 대체. HpBar 위젯 대신 Material의 CPD( `Custom Primitive Data` )로 변경하여 40ms 구간에서 프레임 타임 방어 성공.
+>- 네트워크 최적화 ( `한계 및 향후 계획` ): 위치 동기화 부하를 줄이고자 `ReplicateMovement` 를 끄고, 클라이언트가 타겟 정보만 받아 자체적으로 이동을 연산하는 Dead Reckoning 방식 시도.
+>- 현재 클라이언트 단에서 몬스터가 스폰 지점에 정지하는 이슈가 발생하여, 향후 활성화( `Multicast_Activate` )와 클라이언트의 로컬 틱( `Tick` ) 실행 순서 간의 동기화 타이밍을 디버깅해 완성할 예정.
+
+</details>
+</ul>
+
+<br>
+<hr>
+
+### 2. 언리얼 공포 게임 <sub>(사이드 프로젝트)<sub>
+> **요약 :** "언리얼 엔진을 사용한 3D 인도어 호러게임"
+
+
+| Preview & Info |
+| :---: |
+| <img src="https://github.com/user-attachments/assets/464dadda-7430-4ac0-95b4-f70ecb471c83" width="500px"> |
 | <br>**개발 기간 :** `2024.03 ~ 2024.09`<br><br>**인원 :** `2명` ( 1 Designer, **`1 Programmer`** )<br><br>**Repository :** [링크](https://github.com/1frbottom/UE5_Horror)<br><br>**사용 기술 :** `UE5`, `C++`, `AIPerception`<br><br> |
 
 #### 핵심 기여
@@ -65,12 +112,12 @@
 <br>
 <hr>
 
-### 2. 자바 모작 게임 <sub>(교내 프로젝트)<sub>
+### 3. 자바 모작 게임 <sub>(교내 프로젝트)<sub>
 > **요약 :** "종스크롤 슈팅 모작 게임"
 
 | Preview & Info |
 | :---: |
-| <img src="https://github.com/user-attachments/assets/78050039-a7f0-4a3a-9e2a-c1c0dca566a7" width="500px"> |
+| <img src="https://github.com/user-attachments/assets/483934f5-500e-42bd-9590-93aa69fa0205" width="500px"> |
 | <br>**개발 기간 :** `2024.03 ~ 2024.06`<br><br>**인원 :** `3명` ( **`3 Developer`** )<br><br>**Repository :** [링크](https://github.com/1frbottom/Java_Clone_Game)<br><br>**사용 기술 :** `Java`, `awt`, `swing`<br><br> |
 
 #### 핵심 기여
@@ -106,12 +153,12 @@
 <br>
 <hr>
 
-### 3. 디지털트윈 데이터 파이프라인 <sub>(교내 프로젝트)<sub>
-> **요약 :** "디지털트윈을 위한 실시간 공공 교통데이터 동기화 파이프라인 및 가시화"<br><br>디지털트윈은 `데이터 수집 -> 데이터 동기화 -> 데이터 시각화` 의 세 단계로 나뉘며, 이중 데이터 동기화 부분은 다른 단계에 비해 미비한 실정으로, 이를 개선하고자 진행된 프로젝트입니다.<br><br>파이프라인은 `데이터 수집 -> Kafka -> Spark -> DBMS -> Api Server -> 웹` 과 같습니다.<br><br>프리뷰의 우측 창은 에픽게임즈가 디지털트윈의 표준으로 제시한 오픈소스 프로젝트인 `City Sample` 위에 해당 프로젝트 파이프라인을 얹은 모습입니다. 
+### 4. 디지털트윈 데이터 파이프라인 <sub>(교내 프로젝트)<sub>
+> **요약 :** "디지털트윈을 위한 실시간 공공 교통데이터 동기화 파이프라인 및 가시화"<br><br>디지털트윈은 `데이터 수집 -> 데이터 동기화 -> 데이터 시각화` 의 세 단계로 나뉘며, 이중 데이터 동기화 부분은 다른 단계에 비해 미비한 실정으로, 이를 개선하고자 진행된 프로젝트입니다.<br><br>파이프라인은 `데이터 수집 -> Kafka -> Spark -> DBMS -> Api Server -> 웹` 과 같습니다.<br><br>아래 프리뷰의 우측은 에픽게임즈 사가 디지털트윈의 표준으로 제시한 언리얼 엔진 오픈소스 프로젝트인 `City Sample` 위에 해당 프로젝트 파이프라인을 얹은 모습입니다. 
 
 | Preview & Info |
 | :---: |
-| <img src="https://github.com/user-attachments/assets/d83f7901-7cce-4828-9d31-e76658d83f2a" width="500px"> |
+| <img src="https://github.com/user-attachments/assets/9eb71472-ac09-4592-840d-354bec96641d" width="500px"> |
 | <br>**개발 기간 :** `2025.09 ~ 2025.12`<br><br>**인원 :** `4명` ( **`2 Backend`**, 2 Frontend )<br><br>**Repository :** [링크](https://github.com/1frbottom/DigitalTwin_PipeLine)<br><br>**사용 기술 :** `Python`, `JavaScript`, `Html`, `Css`<br>`Kafka`, `Spark`, `FastAPI`, `PostgreSQL`, `Docker` <br><br> |
 
 #### 핵심 기여
