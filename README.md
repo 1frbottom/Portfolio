@@ -52,7 +52,7 @@
 >**해결 과정 :**
 >  
 >- 성능 최적화 ( `해결` ): Object Pool 도입하여 액터 생성 비용 제거. 이동 로직의 Sweep을 비활성화하고 피격 판정을 단순 거리 벡터로 대체. 체력 위젯 대신 Material의 CPD( `Custom Primitive Data` )로 변경하여 40ms 구간에서 프레임 타임 방어 성공.<br><br>
->- 네트워크 최적화 ( `한계 및 향후 계획` ): 위치 동기화 부하를 줄이고자 `ReplicateMovement` 를 끄고, 클라이언트가 타겟 정보만 받아 자체적으로 이동을 연산하는 Dead Reckoning 방식 시도.<br><br>
+>- 네트워크 최적화 ( `해결중` ): 위치 동기화 부하를 줄이고자 `ReplicateMovement` 를 끄고, 클라이언트가 타겟 정보만 받아 자체적으로 이동을 연산하는 Dead Reckoning 방식 시도.<br><br>
 >- 현재 클라이언트 단에서 몬스터가 스폰 지점에 정지하는 이슈가 발생하여, 향후 활성화( `Multicast_Activate` )와 클라이언트의 로컬 `Tick()` 실행 순서 간의 동기화 타이밍을 디버깅해 완성할 예정.
 
 </details>
