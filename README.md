@@ -44,8 +44,8 @@
 ><br><br>
 >**원인 분석 :**
 >
->- 잦은 `SpawnActor()` 로 인한 메모리 할당 및 Garbage Collector 부하.
->- 몬스터 이동 시 물리 Sweep 연산, `GetOverlappingActors()` 및 UI(Widget) 렌더링의 누적 병목.
+>- 잦은 `SpawnActor()` 로 인한 메모리 할당 및 Garbage Collector 부하.<br><br>
+>- 몬스터 이동 시 물리 Sweep 연산, `GetOverlappingActors()` 및 UI(Widget) 렌더링의 누적 병목.<br><br>
 >- 대량의 몬스터 Transform을 서버가 매 프레임 `ReplicateMovement`로 동기화하면서 발생한 네트워크 병목.<br><br>
 >
 >**해결 과정 :**
