@@ -20,40 +20,44 @@
 
 | Preview & Info |
 | :---: |
-| <img src="https://github.com/user-attachments/assets/57cd3550-6b5f-43ae-b016-b644ae3dee9d" width="500px"> |
+| <img src="https://github.com/user-attachments/assets/eeb11186-2e18-403a-9015-3614187cb8e8" width="500px"> |
 | <br>**개발 기간 :** `2026.03 ~ 진행중`<br><br>**인원 :** `1명` <br><br>**Repository :** [링크(미완)](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br>**사용 기술 :** `UE5`, `C++`<br><br> |
 
 #### 핵심 기여
-1. `OnlineSubsystem` 및 서버 권위 기반 멀티플레이어 프레임워크
-    - `GameInstance` 클래스에서 `OnlineSubsystem` 을 활용해 세션 생성, 검색 및 스팀 친구 초대 콜백 `OnSessionUserInviteAccepted()` 구현. 예외상황 발생 시 `OnNetworkFailure()` 델리게이트와 연동하여 세션을 안전하게 파괴, 메인 메뉴로 복귀( `ClientTravel` )하는 예외처리 흐름 구축.
-
-    - 서버 원칙에 따라 `GameState` 클래스에서 게임 흐름( `ENYGamePhase` )을 통제. 데이터가 변경될 때 `RepNotify`( `OnRep_CurrPhase()` )를 통해 각 클라이언트의 `PlayerController`가 정확한 시점에 UI( `ShowRewardUI()`, `ShowGameOverUI()` )를 띄우도록 동기화하여 멀티플레이 환경의 UI 타이밍 이슈 방지.
-
-    - 클라이언트의 입력(보상 선택, 재도전 등)은 `PlayerController`의 RPC `Server_RequestRetry()` 를 통해 서버 측 `GameMode` 클래스로 전달하여 검증. UI렌더링 로직은 `BlueprintImplementableEvent` 로 노출시켜 소스와 블루프린트 간의 결합도를 낮춤.<br><br>
+1. `OnlineSubsystem` 기반 멀티플레이어 세션<br><br>
+    - `GameInstance` 에서 세션 생성-검색 및 스팀 친구 초대 콜백 처리. 예외 발생 시 `OnNetworkFailure()` 연동으로 안전하게 세션파괴 이후 메인 메뉴 복귀( `ClientTravel` ).<br><br>
+2. 서버 권위 게임 흐름 / UI 동기화<br><br>
+    - `GameState` 가 게임 페이즈를 통제, `RepNotify` 로 각 클라이언트가 적절하게 보상-게임오버 UI를 띄우도록 동기화.<br><br>
+    - 클라이언트 입력(`보상 선택 / 재도전`)은 `PlayerController` RPC로 서버 `GameMode` 에 전달-검증. UI 렌더링은 `BIE` 로 분리해 소스-블루프린트 결합도 절감.<br><br>
+3. 데이터 드리븐 스테이지 구성<br><br>
+    - 웨이브 진행( 마리수, 스폰간격, 몬스터종류 ) / 레벨업요구치 / 처치보상 / 무기성장치 등을 각각 DataTable로 관리함으로서 밸런스 조정 편의성 도모.<br><br>
 
 #### 트러블슈팅
 
 <ul>
 <details>
-<summary> [ OnGoing ] 대규모 몬스터 처리 성능 최적화 및 네트워크 동기화 이슈 ( Click )</summary>
+<summary> [ <sub>진행중</sub> ] 대규모 몬스터 처리 성능 최적화 및 네트워크 동기화 이슈 ( Click )</summary>
 
 <br>
 
 >**문제 상황 :**
 >
->`1,000`마리 규모의 몬스터 스폰 시 프레임 타임이 선형적으로 급증. 이후 최적화로 Frame Time은 어느정도 완화했으나, 리슨 서버-클라이언트 환경에서 네트워크 대역폭 초과로 인해 몬스터 움직임이 끊기는 스터터링 현상 발생.
-><br><br>
+>`1,000`마리 스폰 테스트에서 프레임타임이 선형적으로 급증. 리슨 서버-클라이언트 환경에선 네트워크 대역폭 초과로 몬스터 이동에 스터터링 발생.<br><br>
+>
 >**원인 분석 :**
 >
->- 잦은 `SpawnActor()` 로 인한 메모리 할당 및 Garbage Collector 부하.<br><br>
->- 몬스터 이동 시 물리 Sweep 연산, `GetOverlappingActors()` 및 체력 위젯 렌더링의 누적 병목.<br><br>
->- 대량의 몬스터 Transform을 서버가 매 프레임 `ReplicateMovement`로 동기화하면서 발생한 네트워크 병목.<br><br>
+>- 매 스폰마다 `SpawnActor()` 호출 → 메모리 할당 및 가비지컬렉터 부하.<br><br>
+>- 몬스터의 ( 이동 물리 Sweep / 플레이어공격 오버랩쿼리 / 체력바 위젯 렌더링 ) 세가지가 마릿수에 비례해 누적.<br><br>
+>- 대량의 몬스터 트랜스폼을 서버가 매 프레임 `ReplicateMovement` 로 동기화하며 발생한 네트워크 병목.<br><br>
 >
 >**해결 과정 :**
->  
->- 성능 최적화 ( `해결` ): Object Pool 도입하여 액터 생성 비용 제거. 이동 로직의 Sweep을 비활성화하고 피격 판정을 단순 거리 벡터로 대체. 체력 위젯 대신 Material의 CPD( `Custom Primitive Data` )로 변경하여 40ms 구간에서 프레임 타임 방어 성공.<br><br>
->- 네트워크 최적화 ( `해결중` ): 위치 동기화 부하를 줄이고자 `ReplicateMovement` 를 끄고, 클라이언트가 타겟 정보만 받아 자체적으로 이동을 연산하는 Dead Reckoning 방식 시도.<br><br>
->- 현재 클라이언트 단에서 몬스터가 스폰 지점에 정지하는 이슈가 발생하여, 향후 활성화( `Multicast_Activate` )와 클라이언트의 로컬 `Tick()` 실행 순서 간의 동기화 타이밍을 디버깅해 완성할 예정.
+>
+>- 로컬 성능 ( `해결` ): Object Pool 도입으로 액터 생성 비용 제거. 이동 Sweep 비활성화, 피격 판정을 타겟과의 거리 벡터로 대체. 체력바 위젯 대신 Material CPD( `Custom Primitive Data` )로 교체. `40ms` 구간까지 프레임 타임 방어 성공.<br><br>
+>- 네트워크 최적화 ( `해결중` ): `ReplicateMovement` 를 끄고, 활성화 시점에만 타겟·스폰 위치( `FMonsterActivationData` )만 복제 후 클라이언트가 자체적으로 이동을 연산하는 Dead Reckoning 방식 적용. 비활성 풀 몬스터는 `NetDormancy` 로 복제 부하 추가 절감. 스터터링은 크게 완화됐으나 대규모 동시 스폰 기준 재검증은 미완.<br><br>
+>
+>**현재 상태 :**
+>
+>위 `1,000`마리 스트레스 테스트 이후로는 대규모 재측정 미진행. 현재는 일반 웨이브 설정( 스폰 간격 `2초`, `SpawnCountPerTick` `30` ) 기준 정상 동작만 확인한 상태.<br><br>
 
 </details>
 </ul>
@@ -64,48 +68,42 @@
 ### 2. 언리얼 공포 게임 <sub>(사이드 프로젝트)<sub>
 > **요약 :** "언리얼 엔진을 사용한 3D 인도어 호러게임"
 
-
 | Preview & Info |
 | :---: |
 | <img src="https://github.com/user-attachments/assets/464dadda-7430-4ac0-95b4-f70ecb471c83" width="500px"> |
 | <br>**개발 기간 :** `2024.03 ~ 2024.09`<br><br>**인원 :** `2명` ( 1 Designer, **`1 Programmer`** )<br><br>**Repository :** [링크](https://github.com/1frbottom/UE5_Horror)<br><br>**사용 기술 :** `UE5`, `C++`, `AIPerception`<br><br> |
 
 #### 핵심 기여
-1. `AIPerception` / `Behavior Tree`를 활용한 퍼셉션 기반 AI
-    - `AIPerception` 컴포넌트를 통해 Sight과 Hearing 자극을 구분하여 감지. 감지된 정보( `플레이어 위치`, `소리 발생 위치` )를 `BlackBoard`에 업데이트, 이를 기반으로 `Trace` -> `Hearing` -> `Patrol`로 이어지는 유기적인 행동 패턴을 `Behavior Tree`로 구현.
-
-    - AI의 판단 로직( `Controller` )과 수행 로직( `Character` )을 분리. 공격 수행 시 `IHRCharacterAIInterface`와 델리게이트( `OnAttackFinished` )를 통해 애니메이션 종료 시점을 AI 컨트롤러에 정확히 동기화.<br><br>
-
-2. `Enhanced Input` 기반 동적 시점 변환 시스템
-    - 1인칭, 숄더뷰, 쿼터뷰의 3가지 시점을 실시간으로 전환하는 기능을 구현. 단순 카메라 위치만 바꾸는 것이 아닌, 각 시점에 맞는 `Input Mapping Context`를 동적으로 교체( `RemoveMappingContext()` -> `AddMappingContext()` )하여 조작감을 최적화.
-
-    - TMap 형의 `CharacterControlManager`를 사용해 시점별 데이터( `회전 보간 여부`, `Control Rotation 사용 여부`, ... )를 데이터 테이블처럼 관리하여 하드코딩을 방지하고 확장성을 확보.<br><br>
-
-3. 인터페이스를 활용한 의존성 최소화 및 상호작용 시스템
-    - 아이템 습득, 문 열기 등 다양한 상호작용 대상을 Cast To로 일일이 확인하는 대신, `IHRInteractableActorInterface`를 상속받게 하여 유연한 상호작용 시스템 설계.
-
-    - 플레이어 클래스가 특정 사물 클래스( 예: Door, Item )를 알 필요가 없게 만들어 코드의 재사용성과 유지보수성 향상.<br><br>
+1. `AIPerception`, `Behavior Tree` 기반 퍼셉션 AI<br><br>
+    - Sight-Hearing 자극을 감지하고 `BlackBoard`에 갱신, `Trace` → `Hearing` → `Patrol`로 이어지는 행동 패턴을 구현.<br><br>
+    - 컨트롤러와 캐릭터를 분리하고, 인터페이스와 델리게이트로 애니메이션 종료 시점을 AI에 동기화.<br><br>
+2. `Enhanced Input` 기반 동적 시점 전환 시스템<br><br>
+    - 1인칭-숄더뷰-쿼터뷰를 시점별 `IMC` 교체로 실시간 전환.<br><br>
+    - 시점별 데이터를 `TMap`으로 관리해 하드코딩 방지 및 확장성을 확보.<br><br>
+3. 인터페이스 기반 상호작용 시스템<br><br>
+    - 상호작용 대상을 `Cast` 대신 인터페이스로 처리해 결합도 저하.<br><br>
+    - 플레이어와 개별 사물 클래스의 분리로 유지보수성 향상.<br><br>
 
 #### 트러블슈팅
 
 <ul>
 <details>
-<summary> 고스트 애니메이션 블루프린트와 고스트(npc) C++ 클래스 간의 순환 참조 ( Click )</summary>
+<summary> 고스트 ABP <--> Cpp 클래스 간 순환 참조 ( Click )</summary>
 
 <br>
 
 >**문제 상황 :**
 >
->고스트 ABP의 노티파이에서 공격 판정 함수 `AttackHitCheck()`를 호출하기 위해 해당 ABP에서 고스트 C++ 클래스로 캐스팅 후 에디터에서 컴파일중 크래쉬( `Assertion failed` ) 발생.
+>고스트 ABP 노티파이에서 공격 판정 함수 `AttackHitCheck()`호출 위해 Cpp 클래스로 캐스팅시, 에디터 컴파일 중 크래시 발생.
 ><br><br>
 >**원인 분석 :**
 >
->강한 결합( `Tight Coupling` ) -> 기존에 고스트 C++ 클래스가 생성자에서 ABP를 참조하고 있었기 때문에 컴파일타임에 헤더 파일끼리 서로를 참조하는 `Circular Dependency` 오류 발생.
+>고스트 C++ 클래스가 생성자에서 ABP를 참조.
 ><br><br>
 >**해결 과정 :**
->- C++ 인터페이스( `IAttackAnimEventsInterface` ) 안에 `DoAttackHitCheck()` 를 선언하여 고스트 C++ 클래스가 상속.<br><br>
->- 고스트 C++ 클래스에서 이 함수를 정의함으로서 ABP에서는 캐스팅 노드 대신 `Interface Message` 노드를 사용하여 함수를 호출.<br><br>
->- 컴파일타임의 정적 검사 대신, 런타임에 언리얼의 리플렉션 시스템을 이용하여 순환 참조를 해결. 
+>- C++ 인터페이스( `IAttackAnimEventsInterface` )에 `DoAttackHitCheck()`를 선언하고 고스트 C++ 클래스가 이를 상속.<br><br>
+>- 고스트 C++ 클래스에서 함수를 정의해, ABP에서는 캐스팅 노드 대신 `Interface Message` 노드로 호출.<br><br>
+>- 컴파일타임 정적 검사 대신 런타임 리플렉션을 활용해 순환 참조를 해소.
 
 </details>
 </ul>
@@ -122,10 +120,9 @@
 | <br>**개발 기간 :** `2024.03 ~ 2024.06`<br><br>**인원 :** `3명` ( **`3 Developer`** )<br><br>**Repository :** [링크](https://github.com/1frbottom/Java_Clone_Game)<br><br>**사용 기술 :** `Java`, `awt`, `swing`<br><br> |
 
 #### 핵심 기여
-1. Playing state 세부로직 구현
-
-    - 일정시간마다 날아오는 유도 장애물에 플레이어 위치와의 거리 차에 비례한 가속도 보간을 적용하여, 관성을 느낄수 있게 구현.
-    - ArrayList 사용하여 몬스터 스폰 로직 & 객체의 상태변화에 따른 메모리 해제 및 렌더링 설계.
+1. Playing state 세부로직 구현<br><br>
+    - 일정시간마다 날아오는 유도 장애물에 플레이어 위치와의 거리 차에 비례한 가속도 보간을 적용하여, 관성을 느낄수 있게 구현.<br><br>
+    - ArrayList 사용하여 몬스터 스폰 로직 & 객체의 상태변화에 따른 메모리 해제 및 렌더링 설계.<br><br>
 
 #### 트러블슈팅
 
@@ -163,18 +160,16 @@
 | <br>**개발 기간 :** `2025.09 ~ 2025.12`<br><br>**인원 :** `4명` ( **`2 Backend`**, 2 Frontend )<br><br>**Repository :** [링크](https://github.com/1frbottom/DigitalTwin_PipeLine)<br><br>**사용 기술 :** `Python`, `JavaScript`, `Html`, `Css`<br>`Kafka`, `Spark`, `FastAPI`, `PostgreSQL`, `Docker` <br><br> |
 
 #### 핵심 기여
-1. 프로젝트 인프라 구축
-    - `Docker Compose` 활용하여 Kafka, Spark, PostgreSQL, FastAPI 등 9종의 컨테이너 Loose Coupling.
-    - `kafka-setup` 컨테이너와 `healthcheck` 도입하여 컨테이너 실행에서의 레이스 컨디션 방지.
-
-2. 데이터 파이프라인 구현
-    - `Spark Structured Streaming` 통해 Kafka의 토픽들을 구독하여 초 단위 마이크로 배치 처리.
-    - 공공데이터의 비정형적인 JSON구조를 `from_json()`, `explode()` 사용하여 평탄화 및 정규화.
-    - `dropDuplicates()` 및 `withWatermark()` 사용하여 무결성 유지.
-
-3. 백엔드 구현
-    - `Router - CRUD - Schema - Model` 패턴으로 유지보수성 및 확장성 확보.
-    - 인구현황 등의 정형 데이터는 관계형 테이블로, 승하차 정보 등의 가변구조 데이터는 Raw JSON으로 저장하여 Read-Time에 파싱함으로서 유연성 확보.
+1. 프로젝트 인프라 구축<br><br>
+    - `Docker Compose` 활용하여 Kafka, Spark, PostgreSQL, FastAPI 등 9종의 컨테이너 Loose Coupling.<br><br>
+    - `kafka-setup` 컨테이너와 `healthcheck` 도입하여 컨테이너 실행에서의 레이스 컨디션 방지.<br><br>
+2. 데이터 파이프라인 구현<br><br>
+    - `Spark Structured Streaming` 통해 Kafka의 토픽들을 구독하여 초 단위 마이크로 배치 처리.<br><br>
+    - 공공데이터의 비정형적인 JSON구조를 `from_json()`, `explode()` 사용하여 평탄화 및 정규화.<br><br>
+    - `dropDuplicates()` 및 `withWatermark()` 사용하여 무결성 유지.<br><br>
+3. 백엔드 구현<br><br>
+    - `Router - CRUD - Schema - Model` 패턴으로 유지보수성 및 확장성 확보.<br><br>
+    - 인구현황 등의 정형 데이터는 관계형 테이블로, 승하차 정보 등의 가변구조 데이터는 Raw JSON으로 저장하여 Read-Time에 파싱함으로서 유연성 확보.<br><br>
 
 #### 트러블슈팅
 
