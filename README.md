@@ -1,4 +1,4 @@
-3 # 💼 포트폴리오
+# 💼 포트폴리오
 
 > **"신입 게임 클라이언트 프로그래머 [심조운]입니다."**<br><br>
 > **"더 나은 가독성을 위해 [ReadMe](https://github.com/1frbottom/Portfolio/blob/main/README.md) 클릭 부탁드립니다."**
@@ -20,7 +20,7 @@
 
 | Preview & Info |
 | :---: |
-| <img src="https://github.com/user-attachments/assets/eeb11186-2e18-403a-9015-3614187cb8e8" width="500px"> |
+| <img src="https://github.com/user-attachments/assets/d0b5c84f-a9c8-467c-bb00-8f4069d7b734" width="500px"> |
 | <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br>**인원 :** `1명` <br><br>**Repository :** [링크(미완)](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br>**사용 기술 :** `UE5`, `C++`<br><br> |
 
 #### 핵심 기여
