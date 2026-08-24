@@ -66,7 +66,7 @@
 </details>
 </ul>
 
-<ul></ul>
+<ul>
 <details>
 <summary> [ <sub>해결</sub> ] 최적화 이후 몬스터가 지형을 무시하는 문제 ( Click )</summary>
 
