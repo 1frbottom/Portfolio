@@ -21,7 +21,7 @@
 | Preview & Info |
 | :---: |
 | <img src="https://github.com/user-attachments/assets/eeb11186-2e18-403a-9015-3614187cb8e8" width="500px"> |
-| <br>**개발 기간 :** `2026.03 ~ 진행중`<br><br>**인원 :** `1명` <br><br>**Repository :** [링크(미완)](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br>**사용 기술 :** `UE5`, `C++`<br><br> |
+| <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br>**인원 :** `1명` <br><br>**Repository :** [링크(미완)](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br>**사용 기술 :** `UE5`, `C++`<br><br> |
 
 #### 핵심 기여
 1. `OnlineSubsystem` 기반 멀티플레이어 세션<br><br>
