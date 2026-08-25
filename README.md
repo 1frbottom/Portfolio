@@ -40,29 +40,30 @@
 
 <ul>
 <details>
-<summary> [ <sub>해결</sub> ] 대규모 몬스터 처리 성능 최적화 및 네트워크 동기화 ( Click )</summary>
+<summary> [ <sub>해결</sub> ] 대규모 몬스터 처리 성능 최적화 및 네트워크 동기화 이슈 ( Click )</summary>
 
 <br>
 
 >**문제 상황 :**
 >
->`1,000`마리 스폰 테스트에서 프레임타임이 마릿수에 비례해 상승. 리슨 서버-클라이언트에선 `ReplicateMovement` 로 트랜스폼을 매 프레임 동기화하면서 대역폭이 포화되고, 몬스터 이동에 스터터링 발생.<br><br>
+>`1,000`마리 스폰 테스트에서 프레임타임이 마릿수에 비례해 급증. 리슨 서버-클라이언트 환경에선 네트워크 대역폭 초과로 몬스터 이동에 스터터링 발생.<br><br>
 >
 >**원인 분석 :**
 >
->- 매 스폰마다 `SpawnActor()` → 할당·GC 부하.<br><br>
->- 이동 Sweep / 피격 오버랩 / 체력바 위젯이 마릿수만큼 누적.<br><br>
->- 서버가 몬스터 트랜스폼을 `ReplicateMovement` 로 전송.<br><br>
+>- 매 스폰마다 `SpawnActor()` 호출 → 메모리 할당 및 가비지컬렉터 부하.<br><br>
+>- 몬스터의 ( 이동 물리 Sweep / 플레이어공격 오버랩쿼리 / 체력바 위젯 렌더링 ) 세가지가 마릿수에 비례해 누적.<br><br>
+>- 대량의 몬스터 트랜스폼을 서버가 `ReplicateMovement` 로 동기화하며 발생한 네트워크 병목.<br><br>
 >
 >**해결 과정 :**
 >
->- 로컬 : Object Pool로 런타임 `SpawnActor()` 제거. 피격은 타겟 거리 벡터, 체력바는 위젯 대신 Material CPD. 이후 지형 대응을 위해 전용 `UPawnMovementComponent` 로 바닥 탐지·스텝업만 수행하고, `ShouldTick()` 으로 유휴·풀 대기 몬스터는 틱을 끔.<br><br>
->- 네트워크 : `ReplicateMovement` 비활성. 활성화 시 `FMonsterActivationData`( 타겟, 스폰 위치, `MoveSeed` )만 복제하고, 각 머신이 같은 시드로 이동을 계산. 비활성 풀 몬스터는 `NetDormancy`.<br><br>
+>- 처리 부하 : Object Pool로 런타임 `SpawnActor()` 제거. 이동 Sweep 비활성화, 피격 판정을 타겟과의 거리 벡터로 대체, 체력바 위젯을 Material CPD( `Custom Primitive Data` )로 교체.<br><br>
+>- 네트워크 : `ReplicateMovement` 를 끄고 활성화 시점에만 `FMonsterActivationData`( 타겟 / 스폰 위치 / 이동 시드 )를 복제. 각 머신이 동일한 시드로 같은 경로를 계산하므로 트랜스폼 전송 자체가 불필요. 풀 대기 몬스터는 `NetDormancy`, 원거리 개체는 `NetCullDistance` 로 복제 대상에서 제외.<br><br>
+>- 후속 : Sweep 비활성화의 반대급부로 지형 대응이 사라져, 바닥 탐지와 스텝업만 수행하는 전용 `UPawnMovementComponent` 를 작성해 복구. 이때 늘어난 비용은 `ShouldTick()` 으로 유휴·풀 대기 몬스터의 틱을 차단해 상쇄.<br><br>
 >
->**재측정 ( 2026.08 ) :**
+>**현재 상태 ( 2026.08 / Steam OSS, 리슨 서버 + 클라이언트, 기기 2대 ) :**
 >
->- 로컬 ( 단독 실행, `bSmoothFrameRate` Off ) : 몬스터 `50`마리 `Game 3.48ms` / `Frame 6.59ms` → `1,000`마리 `Game 22.30ms` / `Frame 22.37ms`. 게임 스레드가 상한. GPU는 `4.84ms` → `6.24ms` 로 거의 변동 없음.<br><br>
->- 네트워크 ( 리슨 서버 + 클라이언트 1 ) : 클라이언트 복제 액터 `802` 기준 송신 `3.5KB/s`. `50`마리 때 송신 `5.3KB/s` 와 같은 수준. 컬 거리 `30m` 때문에 풀 `1,000`마리 중 이 클라이언트에 내려오는 상한은 `802`.<br><br>
+>- 처리 부하 : `50`마리 `Frame 6.59ms` → `1,000`마리 `Frame 22.37ms`. 동일 구간에서 `GPU` 는 `4.84ms` → `6.24ms` 로 거의 변동이 없고 `Game 22.30ms` 가 `Frame` 과 일치, 병목이 렌더가 아닌 게임 스레드임을 확인.<br><br>
+>- 네트워크 : 클라이언트 복제 액터 `802` 기준 송신 `3.5KB/s` 로, `50`마리 시점의 `5.3KB/s` 와 동일 수준 유지. 초기 스터터링 해소.<br><br>
 </details>
 </ul>
 
