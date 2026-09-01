@@ -53,7 +53,8 @@
 >- 이동 복제를 끄고 활성화 시점에만 시드·타겟·스폰위치를 복제. 각 머신이 같은 경로를 계산. 대기는 `NetDormancy`, 원거리는 `NetCullDistance`.<br><br>
 >- Sweep OFF로 잃은 지형 대응은 CMC 대신 바닥/스텝업만 가진 전용 `UPawnMovementComponent`로 복구. 유휴 틱은 `ShouldTick()`으로 차단.<br><br>
 >
->**현재 상태 및 프로파일링 [영상](https://www.youtube.com/watch?v=UQ7nFVs-mc0)** (2026.08 / Steam OSS, 기기 2대, 클라 기준, `bSmoothFrameRate` OFF) :<br><br>
+>**현재 상태 및 프로파일링 [영상](https://www.youtube.com/watch?v=UQ7nFVs-mc0)** :
+>- 2026.08 / Steam OSS, 기기 2대, 클라 기준, `bSmoothFrameRate` OFF
 >
 >- 처리 부하 : 
 >   - 몬스터 `100`마리 프레임타임 `7.46ms` → `800`마리 `30.84ms` (`32 FPS`).<br>
