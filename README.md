@@ -24,21 +24,22 @@
 | <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br>**인원 :** `1명` <br><br>**유튜브 :** [링크](https://www.youtube.com/watch?v=KwKsSuFFGsM)<br><br>**Repository :** [링크(문서화 예정)](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br>**사용 기술 :** `UE5`, `C++`<br><br> |
 
 #### 핵심 기여
-1. Steam 세션 및 서버 권위 매치 흐름<br><br>
-    - `GameInstance`에서 세션 생성·검색·친구 초대. 네트워크 실패 시 세션 파괴 후 메인메뉴 복귀.<br><br>
-    - `GameState` 페이즈를 `RepNotify`로 복제해 보상/게임오버 UI를 맞추고, 선택·재도전은 `PlayerController` RPC로 서버에서만 검증.<br><br>
+1. Steam 세션 생성·검색·초대<br><br>
+    - `GameInstance`에서 처리. 네트워크 실패 시 `OnNetworkFailure()`로 세션 파괴 후 메인메뉴 복귀(`ClientTravel`).<br><br>
+2. 서버 권위 페이즈 / UI 동기화<br><br>
+    - `GameState` 페이즈를 `RepNotify`로 복제해 보상·게임오버 UI를 맞추고, 선택·재도전은 `PlayerController` RPC로 서버에서만 검증.<br><br>
 
 #### 트러블슈팅
 
 <ul>
 <details>
-<summary> [ <sub>해결</sub> ] 1000마리 처리 부하 및 이동 동기화 ( Click )</summary>
+<summary> [ <sub>해결</sub> ] 대규모 몬스터 처리 부하 및 이동 동기화 ( Click )</summary>
 
 <br>
 
 >**문제 상황 :**
 >
->`1,000`마리 스폰 시 프레임타임이 마릿수에 비례해 급증. 리슨 서버-클라이언트에선 이동 스터터링 발생.<br><br>
+>`1,000`마리 스폰 테스트에서 프레임타임이 마릿수에 비례해 급증. 리슨 서버-클라이언트에선 이동 스터터링 발생.<br><br>
 >
 >**원인 분석 :**
 >
@@ -48,14 +49,14 @@
 >
 >**해결 과정 :**
 >
->- 풀링으로 런타임 스폰 제거. Sweep OFF, 피격은 거리 판정, 체력바는 Material CPD로 교체.<br><br>
+>- 풀링으로 런타임 스폰 제거. Sweep OFF, 피격은 거리 판정, 체력바는 Material CPD로 교체. 1차(2026.05)에 `40ms` 구간까지 방어.<br><br>
 >- 이동 복제를 끄고 활성화 시점에만 시드·타겟·스폰위치를 복제. 각 머신이 같은 경로를 계산. 대기는 `NetDormancy`, 원거리는 `NetCullDistance`.<br><br>
->- Sweep OFF로 잃은 지형 대응은 전용 `UPawnMovementComponent`(바닥/스텝업)로 복구. 유휴 틱은 `ShouldTick()`으로 차단.<br><br>
+>- Sweep OFF로 잃은 지형 대응은 CMC 대신 바닥/스텝업만 가진 전용 `UPawnMovementComponent`로 복구. 유휴 틱은 `ShouldTick()`으로 차단.<br><br>
 >
->**현재 상태 및 프로파일링 [영상](https://www.youtube.com/watch?v=UQ7nFVs-mc0)** (2026.08 / Steam OSS, 기기 2대, 클라 기준) :<br><br>
+>**현재 상태 및 프로파일링 [영상](https://www.youtube.com/watch?v=UQ7nFVs-mc0)** (2026.08 / Steam OSS, 기기 2대, 클라 기준, `bSmoothFrameRate` OFF) :<br><br>
 >
->- `10`마리 `Frame 6.59ms` → `1,000`마리 `22.37ms` (`Game 22.30ms`, GPU는 `4.84→6.24ms`). 병목은 게임 스레드, `45 FPS`.<br><br>
->- 복제 액터 `802` 기준 송신 `3.5KB/s`. `50`마리 시점 `5.3KB/s`와 같은 수준, 스터터링 해소.<br><br>
+>- 처리 부하 : 몬스터 약 `100`마리 `Frame 7.46ms` → 약 `790`마리 `Frame 30.84ms` (`32 FPS`). GPU는 `5.24ms` → `6.13ms`, `Game 30.89ms`가 `Frame`과 일치. 병목은 게임 스레드.<br><br>
+>- 네트워크 : 복제 액터 `106` / 송신 `5.6KB/s` → `783~800` / `3.5~4.0KB/s`. 액터 수 약 `8`배인데 송신량은 같거나 더 낮음. 스터터링 해소.<br><br>
 </details>
 </ul>
 
