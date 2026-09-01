@@ -49,18 +49,18 @@
 >
 >**해결 과정 :**
 >
->- 풀링으로 런타임 스폰 제거. Sweep OFF, 피격은 거리 판정, 체력바는 Material CPD로 교체. 1차(2026.05)에 `40ms` 구간까지 방어.<br><br>
->- 이동 복제를 끄고 활성화 시점에만 시드·타겟·스폰위치를 복제. 각 머신이 같은 경로를 계산. 대기는 `NetDormancy`, 원거리는 `NetCullDistance`.<br><br>
->- Sweep OFF로 잃은 지형 대응은 CMC 대신 바닥/스텝업만 가진 전용 `UPawnMovementComponent`로 복구. 유휴 틱은 `ShouldTick()`으로 차단.<br><br>
+>- 1차 (2026.05) : 풀링으로 런타임 스폰 제거. Sweep OFF, 피격은 거리 판정, 체력바는 Material CPD로 교체. `40ms` 구간까지 방어.<br><br>
+>- 2차 (2026.06) : 이동 복제를 끄고 활성화 시점에만 시드·타겟·스폰위치를 복제. 대기는 `NetDormancy`, 원거리는 `NetCullDistance`.<br><br>
+>- 3차 (2026.08) : Sweep OFF로 잃은 지형 대응을 CMC 대신 바닥/스텝업만 가진 전용 `UPawnMovementComponent`로 복구. 유휴 틱은 `ShouldTick()`으로 차단.<br><br>
 >
 >**현재 상태 및 프로파일링 [영상](https://www.youtube.com/watch?v=UQ7nFVs-mc0)** :
 >
 >- 2026.08 / Steam OSS, 기기 2대, 클라 기준, `bSmoothFrameRate` OFF
 >
 >- 처리 부하 : 
->   - 몬스터 `100`마리 프레임타임 `7.46ms` → `800`마리 `30.84ms` (`32 FPS`).<br>
->   - GPU타임 `5.24ms` → `6.13ms`로 유지.<br>
->   - 게임 스레드 `30.89ms`로 프레임타임과 일치.<br>
+>   - 몬스터 `100`마리 프레임타임 `7.46ms` → `800`마리 `30.84ms` (`32 FPS`).<br><br>
+>   - GPU타임 `5.24ms` → `6.13ms`로 유지.<br><br>
+>   - 게임 스레드 `30.89ms`로 프레임타임과 일치.<br><br>
 >   - 병목 원인은 렌더가 아닌 게임 스레드(Tick/로직 연산).<br><br>
 >- 네트워크 :
 >   - 복제 액터 `100` → `800`(8배), 송신은 `5.6KB/s` → `3.5~4.0KB/s`로 같거나 더 낮음. 스터터링 해소.
