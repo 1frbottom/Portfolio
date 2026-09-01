@@ -93,17 +93,19 @@
 
 <ul>
 <details>
-<summary> 고스트 ABP <--> Cpp 클래스 간 순환 참조 ( Click )</summary>
+<summary> 고스트 AnimBP <--> 고스트 캐릭터 클래스 간 순환 참조 ( Click )</summary>
 
 <br>
 
 >**문제 상황 :**
 >
->고스트 ABP 노티파이에서 공격 판정 함수 `AttackHitCheck()`호출 위해 Cpp 클래스로 캐스팅시, 에디터 컴파일 중 크래시 발생.
+>고스트 AnimBP 내부 노티파이에서 공격 판정 함수 `DoAttackHitCheck()` 호출을 위해 고스트 클래스로 캐스팅시, 에디터 컴파일 중 크래시 발생.
 ><br><br>
 >**원인 분석 :**
 >
->고스트 C++ 클래스가 생성자에서 ABP를 참조.
+>고스트 클래스가 생성자에서 ABP를 참조.
+>고스트 AnimBP 역시 노티파이 그래프에서 고스트 클래스를 캐스팅하며 참조
+>컴파일타임에 양방향으로 의존성이 생기며 크래시 유발
 ><br><br>
 >**해결 과정 :**
 >- C++ 인터페이스( `IAttackAnimEventsInterface` )에 `DoAttackHitCheck()`를 선언하고 고스트 C++ 클래스가 이를 상속.<br><br>
