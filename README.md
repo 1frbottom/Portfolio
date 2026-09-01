@@ -54,6 +54,7 @@
 >- Sweep OFF로 잃은 지형 대응은 CMC 대신 바닥/스텝업만 가진 전용 `UPawnMovementComponent`로 복구. 유휴 틱은 `ShouldTick()`으로 차단.<br><br>
 >
 >**현재 상태 및 프로파일링 [영상](https://www.youtube.com/watch?v=UQ7nFVs-mc0)** :
+>
 >- 2026.08 / Steam OSS, 기기 2대, 클라 기준, `bSmoothFrameRate` OFF
 >
 >- 처리 부하 : 
