@@ -168,7 +168,7 @@
 | Preview & Info |
 | :---: |
 | <img src="https://github.com/user-attachments/assets/9eb71472-ac09-4592-840d-354bec96641d" width="500px"> |
-| <br>**개발 기간 :** `2025.09 ~ 2025.12`<br><br>**인원 :** `4명` ( **`2 Backend`**, 2 Frontend )<br><br>**Repository :** [링크](https://github.com/1frbottom/DigitalTwin_PipeLine)<br><br>**사용 기술 :** `Python`, `Kafka`, `Spark`, `PostgreSQL`, `Docker` <br><br> |
+| <br>**개발 기간 :** `2025.09 ~ 2025.12`<br><br>**인원 :** `4명` ( **`2 Backend`**, 2 Frontend )<br><br>**Repository :** [링크](https://github.com/1frbottom/DigitalTwin_PipeLine)<br><br>**사용 기술 :** `Python`, `Kafka`, `Spark`, <br>`PostgreSQL`, `Docker` <br><br> |
 
 #### 핵심 기여
 1. 프로젝트 인프라 구축<br><br>
