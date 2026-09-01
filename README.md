@@ -24,46 +24,38 @@
 | <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br>**인원 :** `1명` <br><br>**유튜브 :** [링크](https://www.youtube.com/watch?v=KwKsSuFFGsM)<br><br>**Repository :** [링크(문서화 예정)](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br>**사용 기술 :** `UE5`, `C++`<br><br> |
 
 #### 핵심 기여
-1. `OnlineSubsystem` 기반 멀티플레이어 세션<br><br>
-    - `GameInstance` 에서 세션 생성-검색 및 스팀 친구 초대 콜백 처리. 예외 발생 시 `OnNetworkFailure()` 연동으로 안전하게 세션파괴 이후 메인 메뉴 복귀( `ClientTravel` ).<br><br>
-2. 서버 권위 게임 흐름 / UI 동기화<br><br>
-    - `GameState` 가 게임 페이즈를 통제, `RepNotify` 로 각 클라이언트가 적절하게 보상-게임오버 UI를 띄우도록 동기화.<br><br>
-    - 클라이언트 입력(`보상 선택 / 재도전`)은 `PlayerController` RPC로 서버 `GameMode` 에 전달-검증. UI 렌더링은 `BIE` 로 분리해 소스-블루프린트 결합도 절감.<br><br>
-3. 데이터 드리븐 스테이지 구성<br><br>
-    - `웨이브 진행( 마리수, 스폰간격, 몬스터종류 )` / `레벨업요구치` / `처치보상` / `무기 성장치` 등을 각각 DataTable로 관리함으로서 밸런스 조정 편의성 도모.<br><br>
-4. 대량 몬스터 전용 이동 컴포넌트 자작<br><br>
-    - 최적화로 Sweep을 끄면서 잃은 지형 대응을 복구하되, `UCharacterMovementComponent` 는 수백 마리 동시 구동에 과중하고 몬스터 이동은 복제하지 않으므로 네트워크 예측 기능도 통째로 낭비. `UPawnMovementComponent` 를 상속해 `바닥 탐지 / 중력 / 계단 스텝업 / 경사 슬라이드 / 넉백` 만 직접 구현.<br><br>
-    - 컴포넌트 자체 틱 등록을 끄고( `bAutoUpdateTickRegistration = false` ) 소유 액터의 `Tick` 에서만 구동. 풀링된 몬스터마다 게이팅되지 않은 두 번째 틱이 도는 것을 방지.<br><br>
-    - 매 프레임 `실제 스윕된 거리` 를 `Velocity` 로 발행해 `APawn::GetVelocity()` 가 이동 의도가 아닌 실이동을 반환하도록 구성. `AnimInstance` 가 별도 위치 추적 없이 엔진 표준 경로만 읽도록 단순화.<br><br>
+1. Steam 세션 및 서버 권위 매치 흐름<br><br>
+    - `GameInstance`에서 세션 생성·검색·친구 초대. 네트워크 실패 시 세션 파괴 후 메인메뉴 복귀.<br><br>
+    - `GameState` 페이즈를 `RepNotify`로 복제해 보상/게임오버 UI를 맞추고, 선택·재도전은 `PlayerController` RPC로 서버에서만 검증.<br><br>
 
 #### 트러블슈팅
 
 <ul>
 <details>
-<summary> [ <sub>해결</sub> ] 대규모 몬스터 처리 성능 최적화 및 네트워크 동기화 이슈 ( Click )</summary>
+<summary> [ <sub>해결</sub> ] 1000마리 처리 부하 및 이동 동기화 ( Click )</summary>
 
 <br>
 
 >**문제 상황 :**
 >
->`1,000`마리 스폰 테스트에서 프레임타임이 마릿수에 비례해 급증. 리슨 서버-클라이언트 환경에선 네트워크 대역폭 초과로 몬스터 이동에 스터터링 발생.<br><br>
+>`1,000`마리 스폰 시 프레임타임이 마릿수에 비례해 급증. 리슨 서버-클라이언트에선 이동 스터터링 발생.<br><br>
 >
 >**원인 분석 :**
 >
->- 매 스폰마다 `SpawnActor()` 호출 → 메모리 할당 및 가비지컬렉터 부하.<br><br>
->- 몬스터의 ( 이동 물리 Sweep / 플레이어공격 오버랩쿼리 / 체력바 위젯 렌더링 ) 세가지가 마릿수에 비례해 누적.<br><br>
->- 대량의 몬스터 트랜스폼을 서버가 `ReplicateMovement` 로 동기화하며 발생한 네트워크 병목.<br><br>
+>- 매 스폰 `SpawnActor()` → 할당/GC 부하.<br><br>
+>- 이동 Sweep, 피격 오버랩, 체력바 위젯이 마릿수에 비례.<br><br>
+>- `ReplicateMovement`로 트랜스폼을 전부 동기화하며 대역폭 포화.<br><br>
 >
 >**해결 과정 :**
 >
->- 처리 부하 : Object Pool로 런타임 `SpawnActor()` 제거. 이동 Sweep 비활성화, 피격 판정을 타겟과의 거리 벡터로 대체, 체력바 위젯을 Material CPD( `Custom Primitive Data` )로 교체.<br><br>
->- 네트워크 : `ReplicateMovement` 를 끄고 활성화 시점에만 `FMonsterActivationData`( 타겟 / 스폰 위치 / 이동 시드 )를 복제. 각 머신이 동일한 시드로 같은 경로를 계산하므로 트랜스폼 전송 자체가 불필요. 풀 대기 몬스터는 `NetDormancy`, 원거리 개체는 `NetCullDistance` 로 복제 대상에서 제외.<br><br>
->- 후속 : Sweep 비활성화의 반대급부로 지형 대응이 사라져, 바닥 탐지와 스텝업만 수행하는 전용 `UPawnMovementComponent` 를 작성해 복구. 이때 늘어난 비용은 `ShouldTick()` 으로 유휴·풀 대기 몬스터의 틱을 차단해 상쇄.<br><br>
+>- 풀링으로 런타임 스폰 제거. Sweep OFF, 피격은 거리 판정, 체력바는 Material CPD로 교체.<br><br>
+>- 이동 복제를 끄고 활성화 시점에만 시드·타겟·스폰위치를 복제. 각 머신이 같은 경로를 계산. 대기는 `NetDormancy`, 원거리는 `NetCullDistance`.<br><br>
+>- Sweep OFF로 잃은 지형 대응은 전용 `UPawnMovementComponent`(바닥/스텝업)로 복구. 유휴 틱은 `ShouldTick()`으로 차단.<br><br>
 >
->**현재 상태 및 프로파일링 [영상](https://www.youtube.com/watch?v=UQ7nFVs-mc0) ( 2026.08 / Steam OSS, 리슨 서버 + 클라이언트, 기기 2대, 클라이언트 기준 ) :**
+>**현재 상태 및 프로파일링 [영상](https://www.youtube.com/watch?v=UQ7nFVs-mc0)** (2026.08 / Steam OSS, 기기 2대, 클라 기준) :<br><br>
 >
->- 처리 부하 : `10`마리 `Frame 6.59ms` → `1,000`마리 `Frame 22.37ms`. 동일 구간에서 `GPU` 는 `4.84ms` → `6.24ms` 로 거의 변동이 없고 `Game 22.30ms` 가 `Frame` 과 일치, 병목이 렌더가 아닌 게임 스레드임을 확인. 개체 수 `10`배 증가에도 `45 FPS` 유지.<br><br>
->- 네트워크 : 컬링거리 내부 클라 복제 액터수 `802` 기준 송신 `3.5KB/s` 로, `50`마리 시점의 `5.3KB/s` 와 동일 수준 유지. 초기 스터터링 해소.<br><br>
+>- `10`마리 `Frame 6.59ms` → `1,000`마리 `22.37ms` (`Game 22.30ms`, GPU는 `4.84→6.24ms`). 병목은 게임 스레드, `45 FPS`.<br><br>
+>- 복제 액터 `802` 기준 송신 `3.5KB/s`. `50`마리 시점 `5.3KB/s`와 같은 수준, 스터터링 해소.<br><br>
 </details>
 </ul>
 
