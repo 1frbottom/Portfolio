@@ -20,7 +20,7 @@
 
 | Preview & Info |
 | :---: |
-| <img src="https://github.com/user-attachments/assets/d0b5c84f-a9c8-467c-bb00-8f4069d7b734" width="500px"> |
+| <img src="https://github.com/user-attachments/assets/3f013e05-027a-4192-adf0-085598051639" width="100%"> |
 | <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br> **인원 :** `1명`<br><br> **사용 기술 :** `UE5`, `C++`<br><br> **Repository :** [링크(문서화 진행중)](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br> **유튜브 :** [링크](https://youtu.be/ZDTSspaKov8)<br><br> |
 
 #### 핵심 기여
@@ -77,7 +77,7 @@
 
 | Preview & Info |
 | :---: |
-| <img src="https://github.com/user-attachments/assets/464dadda-7430-4ac0-95b4-f70ecb471c83" width="500px"> |
+| <img src="https://github.com/user-attachments/assets/464dadda-7430-4ac0-95b4-f70ecb471c83" width="500"> |
 | <br>**개발 기간 :** `2024.03 ~ 2024.09`<br><br> **인원 :** `2명` ( 1 Designer, **`1 Programmer`** )<br><br> **사용 기술 :** `UE5`, `C++`, `AIPerception`<br><br> **Repository :** [링크](https://github.com/1frbottom/UE5_Horror)<br><br> **유튜브 :** [링크](https://youtu.be/4RwZF5kehHY)<br><br> |
 
 #### 핵심 기여
@@ -127,7 +127,7 @@
 
 | Preview & Info |
 | :---: |
-| <img src="https://github.com/user-attachments/assets/483934f5-500e-42bd-9590-93aa69fa0205" width="500px"> |
+| <img src="https://github.com/user-attachments/assets/483934f5-500e-42bd-9590-93aa69fa0205" width="600"> |
 | <br>**개발 기간 :** `2024.03 ~ 2024.06`<br><br> **인원 :** `3명` ( **`3 Developer`** )<br><br> **사용 기술 :** `Java`, `awt`, `swing`<br><br> **Repository :** [링크](https://github.com/1frbottom/Java_Clone_Game)<br><br> **유튜브 :** [링크](https://youtu.be/K3EYV_3hiXY)<br><br> |
 
 #### 핵심 기여
