@@ -21,7 +21,7 @@
 | Preview & Info |
 | :---: |
 | <img src="https://github.com/user-attachments/assets/d0b5c84f-a9c8-467c-bb00-8f4069d7b734" width="500px"> |
-| <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br>**인원 :** `1명` <br><br>**유튜브 :** [링크](https://www.youtube.com/watch?v=KwKsSuFFGsM)<br><br>**Repository :** [링크(문서화 예정)](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br>**사용 기술 :** `UE5`, `C++`<br><br> |
+| <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br> **인원 :** `1명`<br><br> **유튜브 :** [링크](https://youtu.be/ZDTSspaKov8)<br><br> **Repository :** [링크(문서화 진행중)](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br> **사용 기술 :** `UE5`, `C++`<br><br> |
 
 #### 핵심 기여
 1. Steam 세션 생성·검색·초대<br><br>
@@ -53,7 +53,7 @@
 >- 2차 (2026.06) : 이동 복제를 끄고 활성화 시점에만 시드·타겟·스폰위치를 복제. 대기는 `NetDormancy`, 원거리는 `NetCullDistance`.<br><br>
 >- 3차 (2026.08) : Sweep OFF로 잃은 지형 대응을 CMC 대신 바닥/스텝업만 가진 전용 `UPawnMovementComponent`로 복구. 유휴 틱은 `ShouldTick()`으로 차단.<br><br>
 >
->**현재 상태 및 프로파일링 [영상](https://www.youtube.com/watch?v=UQ7nFVs-mc0)** :
+>**현재 상태 및 프로파일링 [영상](https://youtu.be/UQ7nFVs-mc0)** :
 >
 >- 2026.08 / Steam OSS, 기기 2대, 클라 기준, `bSmoothFrameRate` OFF
 >
