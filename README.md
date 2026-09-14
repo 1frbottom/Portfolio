@@ -1,4 +1,3 @@
-<img width="600" height="337" alt="asdfwaqef" src="" />
 # 💼 포트폴리오
 
 > **"신입 게임 클라이언트 프로그래머 [심조운]입니다."**<br><br>
