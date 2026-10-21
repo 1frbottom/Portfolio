@@ -61,7 +61,7 @@
 >
 >**현재 상태 및 프로파일링 [영상](https://youtu.be/UQ7nFVs-mc0)** :
 >
->- 2026.08 / Steam OSS, 기기 2대, 클라 기준, `bSmoothFrameRate` OFF
+>- 2026.08 / Steam OSS, 기기 2대, 클라 기준, `bSmoothFrameRate` OFF<br><br>
 >
 >- 처리 부하 : 
 >   - 몬스터 `100`마리 프레임타임 `7.46ms` → `800`마리 `30.84ms` (`32 FPS`).<br><br>
