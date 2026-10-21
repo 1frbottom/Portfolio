@@ -177,7 +177,7 @@
 2. 데이터 파이프라인 구현<br><br>
     - `Spark Structured Streaming` 통해 Kafka의 토픽들을 구독하여 초 단위 마이크로 배치 처리.<br><br>
     - 공공데이터의 비정형적인 JSON구조를 `from_json()`, `explode()` 사용하여 평탄화 및 정규화.<br><br>
-    - `dropDuplicates()` 및 `withWatermark()` 사용하여 무결성 유지.<br><br>
+    - `dropDuplicates()` 사용하여 데이터 중복 방지.<br><br>
 3. 백엔드 구현<br><br>
     - `Router - CRUD - Schema - Model` 패턴으로 유지보수성 및 확장성 확보.<br><br>
     - 인구현황 등의 정형 데이터는 관계형 테이블로, 승하차 정보 등의 가변구조 데이터는 Raw JSON으로 저장하여 Read-Time에 파싱함으로서 유연성 확보.<br><br>
@@ -192,16 +192,17 @@
 
 >**문제 상황 :**
 >
-> JSON/XML의 스키마 불일치 및 파싱 오류
+>공공데이터 API의 비정형 데이터로 인한 파싱 오류 및 API 서버 예외 발생
 ><br><br>
 >**원인 분석 :**
 >
->공공 데이터 API가 특정 케이스마다 JSON 구조를 다르게 반환(Object vs Array)하거나, XML 필드가 누락되어 Spark Job 중단.
+>- Spark : API 응답에 따라 JSON 계층 경로가 임의로 변경되어 스키마 파싱 실패.
+>- 백엔드 : 특정 필드가 누락되거나 빈 상태로 들어올 때 타입 변환 에러 발생.
 ><br><br>
 >**해결 과정 :**
 >
->- Spark SQL의 `coalesce()` 사용하여 JSON 스키마 경로가 변경되더라도 유연하게 대처.<br><br>
->- 백엔드에서는 `json.loads()` 수행시 예외처리와 헬퍼 함수 `get_Val()`를 구현하여 필드누락이나 비정상데이터에 대해서 안전하게 방어.
+>- Spark에서는 `get_json_object()`와 `coalesce()`를 사용해 여러 후보 경로 중 존재하는 값을 우선 파싱.
+>- 백엔드에서는 헬퍼 함수 `get_val()`을 구현해 필수 필드 누락 시 대체 필드를 조회하고, 기본값(0)을 반환하여 방어.
 </details>
 </ul>
 
