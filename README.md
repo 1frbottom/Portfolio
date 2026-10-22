@@ -192,6 +192,10 @@
 3. 백엔드 구현<br><br>
     - `Router - CRUD - Schema - Model` 패턴으로 유지보수성 및 확장성 확보.<br><br>
     - 인구현황 등의 정형 데이터는 관계형 테이블로, 승하차 정보 등의 가변구조 데이터는 Raw JSON으로 저장하여 Read-Time에 파싱함으로서 유연성 확보.<br><br>
+4. UE5 가시화<br><br>
+    - 수집된 실시간 교통·인구 데이터를 오픈소스 샘플 내 차량·보행자 스폰 밀도로 연동해 가시화.<br><br>
+    - 런타임 스폰 수 변경이 불가한 기본 AMassSpawner를 상속해 재스폰 함수 SetCountAndRespawn()를 reparenting으로 구현.<br><br>
+    - VaRest 플러그인으로 API 데이터를 받아 스폰 개수를 동적으로 조절.<br><br>
 
 #### 트러블슈팅
 
