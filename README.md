@@ -20,7 +20,7 @@
 
 | Preview & Info |
 | :---: |
-| <img src="https://github.com/user-attachments/assets/a9c99d8b-5f9d-4db1-8265-89f8490176a2" width="600"> |
+| <img src="https://github.com/user-attachments/assets/44a38d9b-1beb-4af3-99aa-8190c97c6da1" width="600"> |
 | <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br> **인원 :** `1명`<br><br> **사용 기술 :** `UE5`, `C++`<br><br> **Repository :** [링크(문서화 진행중)](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br> **유튜브 :** [링크](https://youtu.be/ZDTSspaKov8)<br><br> |
 
 #### 핵심 기여
@@ -84,7 +84,7 @@
 | Preview & Info |
 | :---: |
 | <img src="https://github.com/user-attachments/assets/464dadda-7430-4ac0-95b4-f70ecb471c83" width="600"> |
-| <br>**개발 기간 :** `2024.03 ~ 2024.09`<br><br> **인원 :** `2명` ( 1 Designer, **`1 Programmer`** )<br><br> **사용 기술 :** `UE5`, `C++`, `AIPerception`<br><br> **Repository :** [링크](https://github.com/1frbottom/UE5_Horror)<br><br> **유튜브 :** [링크](https://youtu.be/4RwZF5kehHY)<br><br> |
+| <br>**개발 기간 :** `2024.03 ~ 2024.09`<br><br> **인원 :** `2명` ( 1 Designer, **`1 Programmer`** )<br><br> **사용 기술 :** `UE5`, `C++`, `AIPerception`<br><br> **Repository :** [링크](https://github.com/1frbottom/UE5_Horror)<br><br> **유튜브 :** [링크](https://youtu.be/VkQyTnjKNqA)<br><br> |
 
 #### 핵심 기여
 1. `AIPerception`, `Behavior Tree` 기반 퍼셉션 AI<br><br>
