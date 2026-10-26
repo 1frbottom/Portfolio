@@ -91,12 +91,11 @@
 1. `AIPerception`, `Behavior Tree` 기반 퍼셉션 AI<br><br>
     - Sight-Hearing 자극을 감지하고 `BlackBoard`에 갱신, `Trace` → `Hearing` → `Patrol`로 이어지는 행동 패턴을 구현.<br><br>
     - 컨트롤러와 캐릭터를 분리하고, 인터페이스와 델리게이트로 애니메이션 종료 시점을 AI에 동기화.<br><br>
+    - **구현 위치 :** Perception 설정과 BT/BB 구성은 에디터에서 작업, 커스텀 `BTTask` / `BTDecorator`와 `AIController`는 C++로 구현.<br><br>
 2. `Enhanced Input` 기반 동적 시점 전환 시스템<br><br>
-    - 1인칭-숄더뷰-쿼터뷰를 시점별 `IMC` 교체로 실시간 전환.<br><br>
-    - 시점별 데이터를 `TMap`으로 관리해 하드코딩 방지 및 확장성을 확보.<br><br>
+    - 1인칭-숄더뷰-쿼터뷰를 시점별 `IMC` 교체로 실시간 전환하고, 시점별 데이터를 `TMap`으로 관리해 확장성 확보.<br><br>
 3. 인터페이스 기반 상호작용 시스템<br><br>
-    - 상호작용 대상을 `Cast` 대신 인터페이스로 처리해 결합도 저하.<br><br>
-    - 플레이어와 개별 사물 클래스의 분리로 유지보수성 향상.<br><br>
+    - 상호작용 실행을 인터페이스로 분리해 플레이어와 개별 사물 클래스의 결합도 저하.<br><br>
 
 #### 트러블슈팅
 
@@ -121,9 +120,8 @@
 ><br><br>
 >
 >**해결 과정 :**
->- C++ 인터페이스( `IAttackAnimEventsInterface` )에 `DoAttackHitCheck()`를 선언하고 고스트 C++ 클래스가 이를 상속.<br><br>
->- 고스트 C++ 클래스에서 함수를 정의해, ABP에서는 캐스팅 노드 대신 `Interface Message` 노드로 호출.<br><br>
->- 컴파일타임 정적 검사 대신 런타임 리플렉션을 활용해 순환 참조를 해소.
+>- C++ 인터페이스( `IHRAnimationInterface` )에 `DoAttackHitCheck()`를 선언하고 고스트 C++ 클래스가 이를 상속.<br><br>
+>- 고스트 C++ 클래스에서 함수를 정의해, ABP에서는 캐스팅 노드 대신 `Interface Message` 노드로 호출해 순환 참조를 해소.
 
 </details>
 </ul>
