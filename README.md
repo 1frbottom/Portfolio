@@ -1,7 +1,7 @@
 # 💼 포트폴리오
 
 > **"신입 게임 클라이언트 프로그래머 [심조운]입니다."**<br><br>
-> **"더 나은 가독성을 위해 [ReadMe](https://github.com/1frbottom/Portfolio/blob/main/README.md) 클릭 부탁드립니다."**
+> **"더 자세한 내용은 각 프로젝트의 Repository 링크 참고 부탁드립니다."**
 
 <br>
 
@@ -21,7 +21,7 @@
 | Preview & Info |
 | :---: |
 | <img src="https://github.com/user-attachments/assets/44a38d9b-1beb-4af3-99aa-8190c97c6da1" width="600"> |
-| <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br> **인원 :** `1명`<br><br> **사용 기술 :** `UE5`, `C++`<br><br> **Repository :** [링크(문서화 진행중)](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br> **유튜브 :** [링크](https://youtu.be/ZDTSspaKov8)<br><br> |
+| <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br> **인원 :** `1명`<br><br> **사용 기술 :** `UE5`, `C++`<br><br> **Repository :** [링크](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br> **유튜브 :** [링크](https://youtu.be/ZDTSspaKov8)<br><br> |
 
 #### 핵심 기여
 1. Steam 세션 생성·검색·초대<br><br>
