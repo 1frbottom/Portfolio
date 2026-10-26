@@ -79,7 +79,7 @@
 <br>
 <hr>
 
-### 2. Horror <sub>(사이드 프로젝트)<sub>
+### 2. Horror <sub>(사이드 프로젝트)</sub>
 > **요약 :** "언리얼 엔진을 사용한 싱글 인도어 호러게임"
 
 | Preview & Info |
@@ -91,7 +91,7 @@
 1. `AIPerception`, `Behavior Tree` 기반 퍼셉션 AI<br><br>
     - Sight-Hearing 자극을 감지하고 `BlackBoard`에 갱신, `Trace` → `Hearing` → `Patrol`로 이어지는 행동 패턴을 구현.<br><br>
     - 컨트롤러와 캐릭터를 분리하고, 인터페이스와 델리게이트로 애니메이션 종료 시점을 AI에 동기화.<br><br>
-    - **구현 위치 :** Perception 설정과 BT/BB 구성은 에디터에서 작업, 커스텀 `BTTask` / `BTDecorator`와 `AIController`는 C++로 구현.<br><br>
+    - **구현 위치 :** Perception 설정은 `BP_AIController`(Blueprint), 행동 흐름은 Behavior Tree로 구성했고, 커스텀 `BTTask` / `BTDecorator`와 `AIController`는 C++로 구현.<br><br>
 2. `Enhanced Input` 기반 동적 시점 전환 시스템<br><br>
     - 1인칭-숄더뷰-쿼터뷰를 시점별 `IMC` 교체로 실시간 전환하고, 시점별 데이터를 `TMap`으로 관리해 확장성 확보.<br><br>
 3. 인터페이스 기반 상호작용 시스템<br><br>
@@ -129,7 +129,7 @@
 <br>
 <hr>
 
-### 3. 자바 모작 게임 <sub>(교내 프로젝트)<sub>
+### 3. 자바 모작 게임 <sub>(교내 프로젝트)</sub>
 > **요약 :** "종스크롤 슈팅 모작 게임"
 
 | Preview & Info |
@@ -172,7 +172,7 @@
 <br>
 <hr>
 
-### 4. 디지털트윈 데이터 파이프라인 <sub>(교내 프로젝트)<sub>
+### 4. 디지털트윈 데이터 파이프라인 <sub>(교내 프로젝트)</sub>
 > **요약 :** "디지털트윈을 위한 실시간 공공 교통데이터 동기화 파이프라인 및 가시화"<br><br>아래 프리뷰의 우측은 UE5 오픈소스 프로젝트인 `City Sample` 위에 해당 프로젝트 파이프라인을 얹은 모습입니다. 
 
 | Preview & Info |
