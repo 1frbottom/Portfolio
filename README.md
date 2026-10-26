@@ -33,7 +33,7 @@
 
 <ul>
 <details>
-<summary> [ <sub>해결</sub> ] 대규모 몬스터 처리 부하 및 이동 동기화 ( Click )</summary>
+<summary> 대규모 몬스터 처리 부하 및 이동 동기화 ( Click )</summary>
 
 <br>
 
