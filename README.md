@@ -24,10 +24,13 @@
 | <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br> **인원 :** `1명`<br><br> **사용 기술 :** `UE5`, `C++`<br><br> **Repository :** [링크](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br> **유튜브 :** [링크](https://youtu.be/ZDTSspaKov8)<br><br> |
 
 #### 핵심 기여
-1. Steam 세션 생성·검색·초대<br><br>
-    - `GameInstance`에서 처리. 네트워크 실패 시 `OnNetworkFailure()`로 세션 파괴 후 메인메뉴 복귀(`ClientTravel`).<br><br>
-2. 서버 권위 페이즈 / UI 동기화<br><br>
-    - `GameState` 페이즈를 `RepNotify`로 복제해 보상·게임오버 UI를 맞추고, 선택·재도전은 `PlayerController` RPC로 서버에서만 검증.<br><br>
+1. 서버 권위 전투<br><br>
+    - 클라이언트는 입력과 조준 방향만 RPC로 전달하고, 쿨다운 검증과 공격 생성은 서버에서 처리.<br><br>
+    - 몬타주의 `AttackCommit` 노티파이 시점을 서버가 읽어 애니메이션과 판정 시점을 일치.<br><br>
+2. 서버 권위 웨이브 / 보상 흐름<br><br>
+    - `GameState` 페이즈를 `RepNotify`로 복제해 UI를 맞추고, 개인별 보상 후보는 `PlayerState`에 `OwnerOnly`로 복제한 뒤 선택을 서버에서 검증.<br><br>
+3. Steam 세션 생성·검색·초대<br><br>
+    - `GameInstance`에서 처리. 네트워크 실패 시 `OnNetworkFailure()`로 세션 파괴 후 메인메뉴 복귀.<br><br>
 
 #### 트러블슈팅
 
@@ -55,7 +58,7 @@
 >
 >- 1차 (2026.05) : 풀링으로 런타임 스폰 제거. Sweep OFF, 피격은 거리 판정, 체력바는 Material CPD로 교체. 프레임타임 `40ms` 구간까지 방어.<br><br>
 >- 2차 (2026.06) : 이동 복제를 끄고 활성화 시점에만 시드·타겟·스폰위치를 복제. 대기는 `NetDormancy`, 원거리는 `NetCullDistance`.<br><br>
->- 3차 (2026.08) : Sweep OFF로 잃은 지형 대응을 CMC 대신 바닥/스텝업만 가진 전용 `UPawnMovementComponent`로 복구. 유휴 틱은 `ShouldTick()`으로 차단.
+>- 3차 (2026.08) : 1차에서 Sweep을 끄며 잃은 지형 대응을 CMC 대신 바닥 추적·스텝업만 가진 전용 `UPawnMovementComponent`로 복구. `ShouldTick()`으로 필요없는 틱 차단.
 >
 ><br><br>
 >
