@@ -21,16 +21,13 @@
 | Preview & Info |
 | :---: |
 | <img src="https://github.com/user-attachments/assets/44a38d9b-1beb-4af3-99aa-8190c97c6da1" width="600"> |
-| <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br> **인원 :** `1명`<br><br> **사용 기술 :** `UE5`, `C++`<br><br> **Repository :** [링크](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br> **유튜브 :** [링크](https://youtu.be/ZDTSspaKov8)<br><br> |
+| <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br> **인원 :** `1명`<br><br> **사용 기술 :** `UE5`, `C++`, `Steam OSS`<br><br> **Repository :** [링크](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br> **유튜브 :** [링크](https://youtu.be/ZDTSspaKov8)<br><br> |
 
 #### 핵심 기여
-1. 서버 권위 전투<br><br>
-    - 클라이언트는 입력과 조준 방향만 RPC로 전달하고, 쿨다운 검증과 공격 생성은 서버에서 처리.<br><br>
-    - 몽타주의 `AttackCommit` 노티파이 시점을 서버가 읽어 애니메이션과 판정 시점을 일치.<br><br>
-2. 서버 권위 웨이브 / 보상 흐름<br><br>
-    - `GameState` 페이즈를 `RepNotify`로 복제해 UI를 맞추고, 개인별 보상 후보는 `PlayerState`에 `OwnerOnly`로 복제한 뒤 선택을 서버에서 검증.<br><br>
-3. Steam 세션 생성·검색·초대<br><br>
-    - `GameInstance`에서 처리. 네트워크 실패 시 `OnNetworkFailure()`로 세션 파괴 후 메인메뉴 복귀.<br><br>
+1. 대규모 몬스터 처리 구조<br><br>
+    - Object Pool, `NetDormancy`, 전용 `UPawnMovementComponent`로 부하와 이동 동기화 문제를 해결. *( 아래 트러블슈팅 참고 )*<br><br>
+2. 서버 권위 멀티플레이 구조<br><br>
+    - 전투, 웨이브, 보상의 판정은 서버에서만 하고, 클라이언트는 입력만 RPC로 전달.<br><br>
 
 #### 트러블슈팅
 
