@@ -21,7 +21,7 @@
 | Preview & Info |
 | :---: |
 | <img src="https://github.com/user-attachments/assets/44a38d9b-1beb-4af3-99aa-8190c97c6da1" width="600"> |
-| <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br> **인원 :** `1명`<br><br> **사용 기술 :** `UE5`, `C++`, `Steam OSS`<br><br> **Repository :** [링크](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br> **유튜브 :** [링크](https://youtu.be/ZDTSspaKov8)<br><br> |
+| <br>**개발 기간 :** `2026.05 ~ 진행중`<br><br> **인원 :** `1명`<br><br> **사용 기술 :** `UE5`, `C++`, `Steam OSS`<br><br> **Repository :** [링크](https://github.com/1frbottom/UE5_Protject_Nayuta)<br><br> **유튜브 :** [링크](https://youtu.be/VkQyTnjKNqA)<br><br> |
 
 #### 핵심 기여
 1. 대규모 몬스터 처리 구조<br><br>
