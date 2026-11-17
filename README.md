@@ -34,7 +34,7 @@
 
 <ul>
 <details>
-<summary> 대규모 몬스터 처리 부하 및 이동 동기화 ( Click )</summary>
+<summary> 대규모 몬스터 처리 부하 및 이동 동기화 <em>—( click )</em></summary>
 
 <br>
 
@@ -76,7 +76,7 @@
 </details>
 
 <details>
-<summary> 클라이언트 위치 보정 (러버밴딩) ( `Click` )</summary>
+<summary> 클라이언트 위치 보정 (러버밴딩) ( Click )</summary>
 
 <br>
 
