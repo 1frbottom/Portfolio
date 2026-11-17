@@ -76,7 +76,7 @@
 </details>
 
 <details>
-<summary> 클라이언트 위치 보정 (러버밴딩) ( Click )</summary>
+<summary> 클라이언트 위치 보정 (러버밴딩) ( `Click` )</summary>
 
 <br>
 
