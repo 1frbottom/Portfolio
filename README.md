@@ -25,10 +25,10 @@
 
 #### 핵심 기여
 1. 대규모 몬스터 처리 구조<br><br>
-    - Object Pool, `NetDormancy`, 몬스터전용 `UPawnMovementComponent`로 부하와 이동 동기화 문제를 해결. *( 하단 트러블슈팅 참고 )*<br><br>
+    - Object Pool, `NetDormancy`, 몬스터전용 `UPawnMovementComponent`로 부하와 이동 동기화 문제를 해결.<br><br>
 2. 서버 권위 멀티플레이 구조<br><br>
     - 서버: 전투-웨이브-보상 판정 처리, 클라이언트에게 받은 RPC로 행동 요청을 검증.<br><br>
-    - 클라이언트: 공격, 보상 선택 등의 행동은 Server RPC로 요청만 전송. 이동은 CMC 예측 기반이며, 스프린트의 속도 변경도 `SavedMove`에 실어 서버가 재계산시에도 동일하도록 구성. *( 하단 트러블슈팅 참고 )*<br><br>
+    - 클라이언트: 공격, 보상 선택 등의 행동은 Server RPC로 요청만 전송. 이동은 CMC 예측 기반이며, 스프린트의 속도 변경도 `SavedMove`에 실어 서버가 재계산시에도 동일하도록 구성.<br><br>
 
 #### 트러블슈팅
 
