@@ -76,7 +76,7 @@
 </details>
 
 <details>
-<summary> 클라이언트 위치 보정 (러버밴딩) ( Click )</summary>
+<summary> 클라이언트 위치 보정 (러버밴딩) <em>—( click )</em></summary>
 
 <br>
 
@@ -127,7 +127,7 @@
 
 <ul>
 <details>
-<summary> 고스트 AnimBP <--> 고스트 캐릭터 클래스 간 순환 참조 ( Click )</summary>
+<summary> 고스트 AnimBP <--> 고스트 캐릭터 클래스 간 순환 참조 <em>—( click )</em></summary>
 
 <br>
 
@@ -172,7 +172,7 @@
 
 <ul>
 <details>
-<summary> 유도 장애물의 보간에서 발생하는 진동현상 ( Click )</summary>
+<summary> 유도 장애물의 보간에서 발생하는 진동현상 <em>—( click )</em></summary>
 
 <br>
 
@@ -226,7 +226,7 @@
 
 <ul>
 <details>
-<summary> JSON 스키마 불일치 및 파싱 오류 ( Click )</summary>
+<summary> JSON 스키마 불일치 및 파싱 오류 <em>—( click )</em></summary>
 
 <br>
 
