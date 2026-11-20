@@ -105,7 +105,62 @@
 <br>
 <hr>
 
-### 2. Horror <sub>(사이드 프로젝트)</sub>
+### 2. 디지털트윈 데이터 파이프라인 <sub>(교내 프로젝트)</sub>
+> **요약 :** "디지털트윈을 위한 실시간 공공 교통데이터 동기화 파이프라인 및 가시화"<br><br>아래 프리뷰의 우측은 UE5 오픈소스 프로젝트인 `City Sample` 위에 해당 프로젝트 파이프라인을 얹은 모습입니다. 
+
+| Preview & Info |
+| :---: |
+| <img src="https://github.com/user-attachments/assets/9eb71472-ac09-4592-840d-354bec96641d" width="600"> |
+| <br>**개발 기간 :** `2025.09 ~ 2025.12`<br><br>** 인원 :** `4명` ( **`2 Backend`**, 2 Frontend )<br><br> **사용 기술 :** `Python`, `Kafka`, `Spark`, <br>`PostgreSQL`, `Docker` <br><br> **Repository :** [링크](https://github.com/1frbottom/DigitalTwin_PipeLine)<br><br> **유튜브 :** [링크](https://youtu.be/kguMl6Y8WFU)<br><br> |
+
+#### 핵심 기여
+1. 프로젝트 인프라 구축<br><br>
+    - `Docker Compose` 활용하여 Kafka, Spark, PostgreSQL, FastAPI 등 9종의 컨테이너 Loose Coupling.<br><br>
+    - `kafka-setup` 컨테이너와 `healthcheck` 도입하여 컨테이너 실행에서의 레이스 컨디션 방지.<br><br>
+2. 데이터 파이프라인 구현<br><br>
+    - `Spark Structured Streaming` 통해 Kafka의 토픽들을 구독하여 초 단위 마이크로 배치 처리.<br><br>
+    - 공공데이터의 비정형적인 JSON구조를 `from_json()`, `explode()` 사용하여 평탄화 및 정규화.<br><br>
+    - `dropDuplicates()` 사용하여 데이터 중복 방지.<br><br>
+3. 백엔드 구현<br><br>
+    - `Router - CRUD - Schema - Model` 패턴으로 유지보수성 및 확장성 확보.<br><br>
+    - 인구현황 등의 정형 데이터는 관계형 테이블로, 승하차 정보 등의 가변구조 데이터는 Raw JSON으로 저장하여 Read-Time에 파싱함으로서 유연성 확보.<br><br>
+4. UE5 가시화<br><br>
+    - 수집된 실시간 교통·인구 데이터를 오픈소스 샘플 내 차량·보행자 스폰 밀도로 연동해 가시화.<br><br>
+    - 기본 AMassSpawner를 상속해 재스폰 함수를 구현, 기존 Spawner BP를 reparenting 하여 런타임 스폰 수를 변경 가능하도록 수정.<br><br>
+    - VaRest 플러그인으로 API 데이터를 받아 스폰 개수를 동적으로 조절.<br><br>
+
+#### 트러블슈팅
+
+<ul>
+<details>
+<summary> JSON 스키마 불일치 및 파싱 오류 <em>—( click )</em></summary>
+
+<br>
+
+>**문제 상황 :**
+>
+>- 공공데이터 API의 비정형 데이터로 인한 파싱 오류 및 API 서버 예외 발생.
+>
+><br><br>
+>
+>**원인 분석 :**
+>
+>- Spark : API 응답에 따라 JSON 계층 경로가 임의로 변경되어 스키마 파싱 실패.<br><br>
+>- 백엔드 : 특정 필드가 누락되거나 빈 상태로 들어올 때 타입 변환 에러 발생.
+>
+><br><br>
+>
+>**해결 과정 :**
+>
+>- Spark에서는 `get_json_object()`와 `coalesce()`를 사용해 여러 후보 경로 중 존재하는 값을 우선 파싱.<br><br>
+>- 백엔드에서는 헬퍼 함수 `get_val()`을 구현해 필수 필드 누락 시 대체 필드를 조회하고, 기본값(0)을 반환하여 방어.
+</details>
+</ul>
+
+<br>
+<hr>
+
+### 3. Horror <sub>(사이드 프로젝트)</sub>
 > **요약 :** "언리얼 엔진을 사용한 싱글 인도어 호러게임"
 
 | Preview & Info |
@@ -155,7 +210,7 @@
 <br>
 <hr>
 
-### 3. 자바 모작 게임 <sub>(교내 프로젝트)</sub>
+### 4. 자바 모작 게임 <sub>(교내 프로젝트)</sub>
 > **요약 :** "종스크롤 슈팅 모작 게임"
 
 | Preview & Info |
@@ -192,61 +247,6 @@
 >
 >- dx값이 특정 임계값(20.0f) 이내로 좁혀졌을 때 작동하는 마찰(Damping) 로직 도입.<br><br>
 >- 정렬이 거의 완료되면 매 프레임 x축 속도에 감속 계수(0.95f)를 곱해 관성을 상쇄, 부드럽게 플레이어를 따라 하강.
-</details>
-</ul>
-
-<br>
-<hr>
-
-### 4. 디지털트윈 데이터 파이프라인 <sub>(교내 프로젝트)</sub>
-> **요약 :** "디지털트윈을 위한 실시간 공공 교통데이터 동기화 파이프라인 및 가시화"<br><br>아래 프리뷰의 우측은 UE5 오픈소스 프로젝트인 `City Sample` 위에 해당 프로젝트 파이프라인을 얹은 모습입니다. 
-
-| Preview & Info |
-| :---: |
-| <img src="https://github.com/user-attachments/assets/9eb71472-ac09-4592-840d-354bec96641d" width="600"> |
-| <br>**개발 기간 :** `2025.09 ~ 2025.12`<br><br>** 인원 :** `4명` ( **`2 Backend`**, 2 Frontend )<br><br> **사용 기술 :** `Python`, `Kafka`, `Spark`, <br>`PostgreSQL`, `Docker` <br><br> **Repository :** [링크](https://github.com/1frbottom/DigitalTwin_PipeLine)<br><br> **유튜브 :** [링크](https://youtu.be/kguMl6Y8WFU)<br><br> |
-
-#### 핵심 기여
-1. 프로젝트 인프라 구축<br><br>
-    - `Docker Compose` 활용하여 Kafka, Spark, PostgreSQL, FastAPI 등 9종의 컨테이너 Loose Coupling.<br><br>
-    - `kafka-setup` 컨테이너와 `healthcheck` 도입하여 컨테이너 실행에서의 레이스 컨디션 방지.<br><br>
-2. 데이터 파이프라인 구현<br><br>
-    - `Spark Structured Streaming` 통해 Kafka의 토픽들을 구독하여 초 단위 마이크로 배치 처리.<br><br>
-    - 공공데이터의 비정형적인 JSON구조를 `from_json()`, `explode()` 사용하여 평탄화 및 정규화.<br><br>
-    - `dropDuplicates()` 사용하여 데이터 중복 방지.<br><br>
-3. 백엔드 구현<br><br>
-    - `Router - CRUD - Schema - Model` 패턴으로 유지보수성 및 확장성 확보.<br><br>
-    - 인구현황 등의 정형 데이터는 관계형 테이블로, 승하차 정보 등의 가변구조 데이터는 Raw JSON으로 저장하여 Read-Time에 파싱함으로서 유연성 확보.<br><br>
-4. UE5 가시화<br><br>
-    - 수집된 실시간 교통·인구 데이터를 오픈소스 샘플 내 차량·보행자 스폰 밀도로 연동해 가시화.<br><br>
-    - 기본 AMassSpawner를 상속해 재스폰 함수를 구현, 기존 Spawner BP를 reparenting 하여 런타임 스폰 수를 변경 가능하도록 수정.<br><br>
-    - VaRest 플러그인으로 API 데이터를 받아 스폰 개수를 동적으로 조절.<br><br>
-
-#### 트러블슈팅
-
-<ul>
-<details>
-<summary> JSON 스키마 불일치 및 파싱 오류 <em>—( click )</em></summary>
-
-<br>
-
->**문제 상황 :**
->
->- 공공데이터 API의 비정형 데이터로 인한 파싱 오류 및 API 서버 예외 발생.
->
-><br><br>
->
->**원인 분석 :**
->
->- Spark : API 응답에 따라 JSON 계층 경로가 임의로 변경되어 스키마 파싱 실패.<br><br>
->- 백엔드 : 특정 필드가 누락되거나 빈 상태로 들어올 때 타입 변환 에러 발생.
->
-><br><br>
->
->**해결 과정 :**
->
->- Spark에서는 `get_json_object()`와 `coalesce()`를 사용해 여러 후보 경로 중 존재하는 값을 우선 파싱.<br><br>
->- 백엔드에서는 헬퍼 함수 `get_val()`을 구현해 필수 필드 누락 시 대체 필드를 조회하고, 기본값(0)을 반환하여 방어.
 </details>
 </ul>
 
