@@ -210,50 +210,10 @@
 <br>
 <hr>
 
-### 4. 자바 모작 게임 <sub>(교내 프로젝트)</sub>
-> **요약 :** "종스크롤 슈팅 모작 게임"
-
-| Preview & Info |
-| :---: |
-| <img src="https://github.com/user-attachments/assets/483934f5-500e-42bd-9590-93aa69fa0205" width="600"> |
-| <br>**개발 기간 :** `2024.03 ~ 2024.06`<br><br> **인원 :** `3명` ( **`3 Developer`** )<br><br> **사용 기술 :** `Java`, `awt`, `swing`<br><br> **Repository :** [링크](https://github.com/1frbottom/Java_Clone_Game)<br><br> **유튜브 :** [링크](https://youtu.be/K3EYV_3hiXY)<br><br> |
-
-#### 핵심 기여
-1. Playing state 세부로직 구현<br><br>
-    - 일정시간마다 날아오는 유도 장애물에 플레이어 위치와의 거리 차에 비례한 가속도 보간을 적용하여, 관성을 느낄수 있게 구현.<br><br>
-    - ArrayList 사용하여 몬스터 스폰 로직 & 객체의 상태변화에 따른 메모리 해제 및 렌더링 설계.<br><br>
-
-#### 트러블슈팅
-
-<ul>
-<details>
-<summary> 유도 장애물의 보간에서 발생하는 진동현상 <em>—( click )</em></summary>
-
-<br>
-
->**문제 상황:**
->
->- 유도 장애물이 목표 위치에 도달했을 때, 부드럽게 멈추지 않고 좌우로 심하게 떨리는 현상이 발생.
->
-><br><br>
->
->**원인 분석:**
->
->- x축 거리에 비례해 속도를 더하는 가속도 로직( `velocity += dx * coefficient` ) 특성상, 둘 사이의 거리가 0이 되더라도 이미 누적된 횡이동 속도(관성)가 남아있음.
->
-><br><br>
->
->**해결 과정:**
->
->- dx값이 특정 임계값(20.0f) 이내로 좁혀졌을 때 작동하는 마찰(Damping) 로직 도입.<br><br>
->- 정렬이 거의 완료되면 매 프레임 x축 속도에 감속 계수(0.95f)를 곱해 관성을 상쇄, 부드럽게 플레이어를 따라 하강.
-</details>
-</ul>
-
-<br>
-<hr>
-
 ## 📄 Other Projects
-* **[Java_LibGDX_JumpKingLike](https://github.com/1frbottom/Java_LibGDX_JumpKingLike/blob/main/README.md) :** 자바의 LibGDX 라이브러리 사용하여 만든 간단한 2d 점프킹류 게임
+* **[UN6_VR_ZombieDefense](https://github.com/1frbottom/UN6_VR_ZombieDefense) :** 유니티, 메타 SDK 사용 간단 VR 디펜스 fps 게임
 
-* **[UN6_VR_ZombieDefense](https://github.com/1frbottom/UN6_VR_ZombieDefense/blob/main/README.md) :** 유니티와 메타 SDK를 사용한 간단한 VR 디펜스 fps 게임
+* **[Java_LibGDX_JumpKingLike](https://github.com/1frbottom/Java_LibGDX_JumpKingLike) :** 자바 LibGDX 사용 간단 2d 점프킹류 게임
+
+* **[Java_Clone_Game](https://github.com/1frbottom/Java_Clone_Game) :** 자바 awt/swing 사용 간단 종스크롤 슈팅 모작 게임
+
