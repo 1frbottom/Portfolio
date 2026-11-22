@@ -162,43 +162,12 @@
 | <br>**개발 기간 :** `2025.03 ~ 2025.09`<br><br> **인원 :** `2명` ( 1 Designer, **`1 Programmer`** )<br><br> **사용 기술 :** `UE5`, `C++`, `AIPerception`<br><br> **Repository :** [링크](https://github.com/1frbottom/UE5_Horror)<br><br> **유튜브 :** [링크](https://youtu.be/VkQyTnjKNqA)<br><br> |
 
 #### 핵심 기여
-1. `AIPerception`, `Behavior Tree` 기반 퍼셉션 AI<br><br>
-    - Sight-Hearing 자극을 감지하고 `BlackBoard`에 갱신, `Trace` → `Hearing` → `Patrol`로 이어지는 행동 패턴을 구현.<br><br>
-    - 컨트롤러와 캐릭터를 분리하고, 인터페이스와 델리게이트로 애니메이션 종료 시점을 AI에 동기화.<br><br>
-    - **구현 위치 :** Perception 설정은 `BP_AIController`(Blueprint), 행동 흐름은 Behavior Tree로 구성했고, 커스텀 `BTTask` / `BTDecorator`와 `AIController`는 C++로 구현.<br><br>
-2. `Enhanced Input` 기반 동적 시점 전환 시스템<br><br>
-    - 1인칭-숄더뷰-쿼터뷰를 시점별 `IMC` 교체로 실시간 전환하고, 시점별 데이터를 `TMap`으로 관리해 확장성 확보.<br><br>
-3. 인터페이스 기반 상호작용 시스템<br><br>
-    - 상호작용 실행을 인터페이스로 분리함으로써 플레이어와 개별 사물 클래스의 결합도 낮춤.<br><br>
-
-#### 트러블슈팅
-
-<ul>
-<details>
-<summary> 고스트 AnimBP <--> 고스트 캐릭터 클래스 간 순환 참조 <em>—( click )</em></summary>
-
-<br>
-
->**문제 상황 :**
->
->- 고스트 AnimBP 내부 노티파이에서 공격 판정 함수 `DoAttackHitCheck()` 호출을 위해 고스트 클래스로 캐스팅시, 에디터 컴파일 중 크래시 발생.
->
-><br><br>
->
->**원인 분석 :**
->
->- 고스트 클래스가 생성자에서 ABP를 참조.<br><br>
->- 고스트 AnimBP 역시 노티파이 그래프에서 고스트 클래스를 캐스팅하며 참조.<br><br>
->- 컴파일타임에 양방향으로 의존성이 생기며 크래시 유발.
->
-><br><br>
->
->**해결 과정 :**
->- C++ 인터페이스( `IHRAnimationInterface` )에 `DoAttackHitCheck()`를 선언하고 고스트 C++ 클래스가 이를 상속.<br><br>
->- 고스트 C++ 클래스에서 함수를 정의해, ABP에서는 캐스팅 노드 대신 `Interface Message` 노드로 호출해 순환 참조를 해소.
-
-</details>
-</ul>
+1. 인터페이스 기반 상호작용 시스템<br><br>
+    - 플레이어는 인터페이스로만 실행 요청해 문·서랍·아이템 BP와 결합도를 낮춤.<br><br>
+    - 근접 감지·시선 판정·외형 콜리전을 분리하고 전용 트레이스 채널을 두어, 가려진 물체의 판정 문제를 해결.<br><br>
+2. `AIPerception`, `Behavior Tree` 기반 고스트 AI<br><br>
+    - 시각·청각 감지를 `Blackboard`에 갱신해 추적 → 소리 확인 → 순찰로 전환.<br><br>
+    - 공격 `BTTask`를 애니메이션 종료 델리게이트로 끝내 행동이 겹치지 않도록 동기화.<br><br>
 
 <br>
 <hr>
