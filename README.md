@@ -114,16 +114,10 @@
 
 #### 핵심 기여
 1. 프로젝트 인프라 구축<br><br>
-    - `Docker Compose` 활용하여 Kafka, Spark, PostgreSQL, FastAPI 등 9종의 컨테이너 Loose Coupling.<br><br>
-    - `kafka-setup` 컨테이너와 `healthcheck` 도입하여 컨테이너 실행에서의 레이스 컨디션 방지.<br><br>
+    - `Docker Compose`로 Kafka·Spark·PostgreSQL 등 10개 서비스 구성, `healthcheck`와 `depends_on` 조건으로 토픽 생성 완료 후 Spark가 구독하도록 기동 순서 보장.<br><br>
 2. 데이터 파이프라인 구현<br><br>
-    - `Spark Structured Streaming` 통해 Kafka의 토픽들을 구독하여 초 단위 마이크로 배치 처리.<br><br>
-    - 공공데이터의 비정형적인 JSON구조를 `from_json()`, `explode()` 사용하여 평탄화 및 정규화.<br><br>
-    - `dropDuplicates()` 사용하여 데이터 중복 방지.<br><br>
-3. 백엔드 구현<br><br>
-    - `Router - CRUD - Schema - Model` 패턴으로 유지보수성 및 확장성 확보.<br><br>
-    - 인구현황 등의 정형 데이터는 관계형 테이블로, 승하차 정보 등의 가변구조 데이터는 Raw JSON으로 저장하여 Read-Time에 파싱함으로써 유연성 확보.<br><br>
-4. UE5 가시화<br><br>
+    - `Spark Structured Streaming`으로 중첩 JSON 도시데이터를 `from_json()`·`explode()`로 평탄화해 인구·도로·기상 등 섹션별 테이블로 분기 적재.<br><br>
+3. UE5 가시화<br><br>
     - 수집된 실시간 교통·인구 데이터를 오픈소스 샘플 내 차량·보행자 스폰 밀도로 연동해 가시화.<br><br>
     - 기본 AMassSpawner를 상속해 재스폰 함수를 구현, 기존 Spawner BP를 reparenting 하여 런타임 스폰 수를 변경 가능하도록 수정.<br><br>
     - VaRest 플러그인으로 API 데이터를 받아 스폰 개수를 동적으로 조절.<br><br>
@@ -132,27 +126,27 @@
 
 <ul>
 <details>
-<summary> JSON 스키마 불일치 및 파싱 오류 <em>—( click )</em></summary>
+<summary> 공공데이터 JSON 구조 불일치 및 파싱 오류 <em>—( click )</em></summary>
 
 <br>
 
 >**문제 상황 :**
 >
->- 공공데이터 API의 비정형 데이터로 인한 파싱 오류 및 API 서버 예외 발생.
+>- 공공데이터 API 응답 일부가 Spark에서 null로 파싱되어 누락되고, API 서버에서는 타입 변환 예외 발생.
 >
 ><br><br>
 >
 >**원인 분석 :**
 >
->- Spark : API 응답에 따라 JSON 계층 경로가 임의로 변경되어 스키마 파싱 실패.<br><br>
->- 백엔드 : 특정 필드가 누락되거나 빈 상태로 들어올 때 타입 변환 에러 발생.
+>- Spark : 같은 섹션이라도 응답에 따라 `$.A.A`(래퍼 태그 중첩) 또는 `$.A`로 계층 경로가 달라져, 고정 경로로 `from_json()` 파싱 시 null 반환.<br><br>
+>- 백엔드 : 특정 필드가 누락되거나 빈 문자열로 들어올 때 정수 변환에서 예외 발생.
 >
 ><br><br>
 >
 >**해결 과정 :**
 >
->- Spark에서는 `get_json_object()`와 `coalesce()`를 사용해 여러 후보 경로 중 존재하는 값을 우선 파싱.<br><br>
->- 백엔드에서는 헬퍼 함수 `get_val()`을 구현해 필수 필드 누락 시 대체 필드를 조회하고, 기본값(0)을 반환하여 방어.
+>- Spark : `get_json_object()`로 후보 경로를 각각 추출한 뒤 `coalesce()`로 존재하는 값을 우선 선택.<br><br>
+>- 백엔드 : 헬퍼 함수 `get_val()`을 구현해 필드 누락 시 대체 필드를 조회하고, 없으면 기본값(0)을 반환하여 방어.
 </details>
 </ul>
 
