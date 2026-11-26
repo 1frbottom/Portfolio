@@ -117,7 +117,7 @@
     - `Docker Compose`로 Kafka·Spark·PostgreSQL 등 10개 서비스 구성, `healthcheck`와 `depends_on` 조건으로 토픽 생성 완료 후 Spark가 구독하도록 기동 순서 보장.<br><br>
 2. 데이터 파이프라인 구현<br><br>
     - `Spark Structured Streaming`으로 중첩 JSON 도시데이터를 `from_json()`·`explode()`로 평탄화해 인구·도로·기상 등 섹션별 테이블로 분기 적재.<br><br>
-3. UE5 가시화<br><br>
+3. UE5 가시화 <sub>(오픈소스)</sub><br><br>
     - 수집된 실시간 교통·인구 데이터를 오픈소스 샘플 내 차량·보행자 스폰 밀도로 연동해 가시화.<br><br>
     - 기본 AMassSpawner를 상속해 재스폰 함수를 구현, 기존 Spawner BP를 reparenting 하여 런타임 스폰 수를 변경 가능하도록 수정.<br><br>
     - VaRest 플러그인으로 API 데이터를 받아 스폰 개수를 동적으로 조절.<br><br>
