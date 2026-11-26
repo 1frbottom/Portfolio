@@ -104,7 +104,26 @@
 <br>
 <hr>
 
-### 2. 디지털트윈 데이터 파이프라인 <sub>(교내 프로젝트)</sub>
+### 2. Horror <sub>(사이드 프로젝트)</sub>
+> **요약 :** "언리얼 엔진을 사용한 싱글 인도어 호러게임"
+
+| Preview & Info |
+| :---: |
+| <img src="./images/Horror.gif" width="600"> |
+| <br>**개발 기간 :** `2025.03 ~ 2025.09`<br><br> **인원 :** `2명` ( 1 Designer, **`1 Programmer`** )<br><br> **사용 기술 :** `UE5`, `C++`<br><br> **Repository :** [링크](https://github.com/1frbottom/UE5_Horror)<br><br> **유튜브 :** [링크](https://youtu.be/4RwZF5kehHY)<br><br> |
+
+#### 핵심 기여
+1. 인터페이스 기반 상호작용 시스템<br><br>
+    - 플레이어는 인터페이스로만 실행 요청해 문·서랍·아이템 BP와 결합도를 낮춤.<br><br>
+    - 근접 감지·시선 판정·외형 콜리전을 분리하고 전용 트레이스 채널을 두어, 가려진 물체의 판정 문제를 해결.<br><br>
+2. `AIPerception`, `Behavior Tree` 기반 고스트 AI<br><br>
+    - 시각·청각 감지를 `Blackboard`에 갱신해 추적 → 소리 확인 → 순찰로 전환.<br><br>
+    - 공격 `BTTask`를 애니메이션 종료 델리게이트로 끝내 행동이 겹치지 않도록 동기화.<br><br>
+
+<br>
+<hr>
+
+### 3. 디지털트윈 데이터 파이프라인 <sub>(교내 프로젝트)</sub>
 > **요약 :** "디지털트윈을 위한 실시간 공공 교통데이터 동기화 파이프라인 및 가시화"<br><br>아래 프리뷰의 우측은 UE5 오픈소스 프로젝트인 `City Sample` 위에 해당 프로젝트 파이프라인을 얹은 모습입니다. 
 
 | Preview & Info |
@@ -149,25 +168,6 @@
 >- 백엔드 : 헬퍼 함수 `get_val()`을 구현해 필드 누락 시 대체 필드를 조회하고, 없으면 기본값(0)을 반환하여 방어.
 </details>
 </ul>
-
-<br>
-<hr>
-
-### 3. Horror <sub>(사이드 프로젝트)</sub>
-> **요약 :** "언리얼 엔진을 사용한 싱글 인도어 호러게임"
-
-| Preview & Info |
-| :---: |
-| <img src="./images/Horror.gif" width="600"> |
-| <br>**개발 기간 :** `2025.03 ~ 2025.09`<br><br> **인원 :** `2명` ( 1 Designer, **`1 Programmer`** )<br><br> **사용 기술 :** `UE5`, `C++`<br><br> **Repository :** [링크](https://github.com/1frbottom/UE5_Horror)<br><br> **유튜브 :** [링크](https://youtu.be/4RwZF5kehHY)<br><br> |
-
-#### 핵심 기여
-1. 인터페이스 기반 상호작용 시스템<br><br>
-    - 플레이어는 인터페이스로만 실행 요청해 문·서랍·아이템 BP와 결합도를 낮춤.<br><br>
-    - 근접 감지·시선 판정·외형 콜리전을 분리하고 전용 트레이스 채널을 두어, 가려진 물체의 판정 문제를 해결.<br><br>
-2. `AIPerception`, `Behavior Tree` 기반 고스트 AI<br><br>
-    - 시각·청각 감지를 `Blackboard`에 갱신해 추적 → 소리 확인 → 순찰로 전환.<br><br>
-    - 공격 `BTTask`를 애니메이션 종료 델리게이트로 끝내 행동이 겹치지 않도록 동기화.<br><br>
 
 <br>
 <hr>
